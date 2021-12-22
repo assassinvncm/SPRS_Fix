@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.constraints.Min;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +33,7 @@ import com.ultils.Constants;
 @RestController
 @RequestMapping("/sprs/api/notification-manage")
 public class NotificationController {
+	public static Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
 	@Autowired
 	private NotificationService notificationService;
@@ -91,7 +94,7 @@ public class NotificationController {
 	}
 
 	@GetMapping("/get-all")
-	public ResponseEntity<?> getNotifications(@RequestHeader("Authorization") String requestTokenHeader,
+	public ResponseEntity<?> updateStatusNotification(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize) {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
@@ -135,6 +138,18 @@ public class NotificationController {
 		notificationService.adminSendNotification(admPns, user);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
+	}
+
+	@GetMapping("/admin/get")
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	public ResponseEntity<?> viewAdminNotification(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize) {
+		logger.info("Start get Notification by Admin");
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		PagingResponse<NotificationDto> noti = notificationService.getNotificationByAdmin(user,pageIndex,pageSize);
+		logger.info("End get Notification by Admin");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "get Notification By Admin Successfull", "", noti, null));
 	}
 
 //	@PutMapping("/delete/{id}")

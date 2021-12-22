@@ -12,6 +12,8 @@ public class NotificationDto {
 	private Object sender;
 
 	private String type;
+	
+	private String title;
 
 	private String message;
 
@@ -71,5 +73,14 @@ public class NotificationDto {
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 
 }

@@ -19,8 +19,10 @@ import com.api.dto.SPRSResponse;
 import com.api.dto.SearchMapResponse;
 import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
+import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.service.MapService;
+import com.api.service.UserService;
 import com.ultils.Constants;
 
 @RestController
@@ -29,6 +31,9 @@ public class MapController {
 
 	@Autowired
 	MapService mapService;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	MapStructMapper mapStructMapper;
@@ -92,5 +97,13 @@ public class MapController {
 		List<SearchMapResponse> lstSearchMapRes =  mapService.search(searchStr, lati, longti, limit);
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstSearchMapRes, null));
+	}
+	
+	@RequestMapping(value = "/isOwnPoint", method = RequestMethod.GET)
+	public ResponseEntity<?> checkIsOwnPoint(@RequestHeader ("Authorization") String requestTokenHeader,
+			@RequestParam("p_id") long p_id,@RequestParam("p_type") String type) {
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		boolean rs =  mapService.checkIsOwnPoint(user, p_id, type);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Check is own point", "", rs, null));
 	}
 }

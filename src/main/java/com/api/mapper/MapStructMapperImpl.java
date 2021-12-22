@@ -661,6 +661,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}
 		NotificationDto notiDto = new NotificationDto();
 		notiDto.setId(notification.getId());
+		notiDto.setTitle(notification.getTitle());
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());
@@ -671,7 +672,10 @@ public class MapStructMapperImpl implements MapStructMapper {
 			notiDto.setSender(storeToStoreDTO(notification.getStore()));
 		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_RELIEFPOINT)) {
 			notiDto.setSender(reliefPointToreliefPointDto(notification.getReliefPoint()));
-		}else {
+		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_SOS)) {
+			notiDto.setSender(SOSToSOSDto(notification.getSos()));
+		}
+		else{
 			notiDto.setSender(userToUserDto(notification.getSender()));
 		}
 

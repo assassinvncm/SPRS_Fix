@@ -28,6 +28,7 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefPoint;
 import com.api.entity.SOS;
 import com.api.entity.Store;
+import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.MapRepository;
 import com.api.repositories.OrganizationRepository;
@@ -52,177 +53,6 @@ public class MapSerivceImpl implements MapService {
 
 	@Autowired
 	SOSRepository SOSRepository;
-
-	@Override
-	public double distanceBetween2Points(double la1, double lo1, double la2, double lo2) {
-		// TODO Auto-generated method stub
-		double R = 6371;
-		double dLat = (la2 - la1) * (Math.PI / 180);
-		double dLon = (lo2 - lo1) * (Math.PI / 180);
-		double la1ToRad = la1 * (Math.PI / 180);
-		double la2ToRad = la2 * (Math.PI / 180);
-		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-				+ Math.cos(la1ToRad) * Math.cos(la2ToRad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double d = R * c;
-		return d;
-	}
-
-	@Override
-	public List<?> findPointinRadius(double la, double lo, double radius, Class<?> destinationType) {
-		// TODO Auto-generated method stub
-		List<?> lstRs = null;
-		if (destinationType.equals(ReliefPoint.class)) {
-			List<ReliefPoint> lstRp = reliefPointRepository.findAll();
-			lstRs = lstRp.stream().filter((rp) -> {
-				double distance = distanceBetween2Points(Double.parseDouble(rp.getAddress().getGPS_Lati()),
-						Double.parseDouble(rp.getAddress().getGPS_Long()), la, lo);
-				if (distance > radius)
-					return false;
-				return true;
-			}).collect(Collectors.toList());
-
-		}
-
-		return lstRs;
-	}
-
-	public List<MapPointsDto> findReliefPoint(double la, double lo, double radius) {
-		List<ReliefPoint> rps = reliefPointRepository.findAll();
-		List<MapPointsDto> mapPoint = new ArrayList<MapPointsDto>();
-		for (ReliefPoint rp : rps) {
-			MapPointsDto mp = new MapPointsDto();
-			if (rp.getAddress().getGPS_Lati() == null || rp.getAddress().getGPS_Lati().isBlank()
-					|| rp.getAddress().getGPS_Long() == null || rp.getAddress().getGPS_Long().isBlank()) {
-				continue;
-			}
-			mp.setId(rp.getId());
-			mp.setType(Constants.MAP_TYPE_RELIEFPOINT);
-			mp.setPoint(new Point(Double.parseDouble(rp.getAddress().getGPS_Lati()),
-					Double.parseDouble(rp.getAddress().getGPS_Long())));
-			mapPoint.add(mp);
-		}
-		return mapPoint;
-	}
-
-	public List<MapPointsDto> findStores(double la, double lo, double radius) {
-		List<Store> stores = storeRepository.findAll();
-		List<MapPointsDto> mapPoint = new ArrayList<MapPointsDto>();
-		for (Store store : stores) {
-			if (store.getLocation().getGPS_Lati() == null || store.getLocation().getGPS_Lati().isBlank()
-					|| store.getLocation().getGPS_Long() == null || store.getLocation().getGPS_Long().isBlank()) {
-				continue;
-			}
-			MapPointsDto mp = new MapPointsDto();
-			mp.setId(store.getId());
-			mp.setType(Constants.MAP_TYPE_STORE);
-			mp.setPoint(new Point(Double.parseDouble(store.getLocation().getGPS_Lati()),
-					Double.parseDouble(store.getLocation().getGPS_Long())));
-			mp.setName(store.getName());
-			mapPoint.add(mp);
-		}
-		return mapPoint;
-	}
-
-	public List<MapPointsDto> findOrganization(double la, double lo, double radius) {
-		List<Organization> orgs = organizationRepository.findAll();
-		List<MapPointsDto> mapPoint = new ArrayList<MapPointsDto>();
-		for (Organization org : orgs) {
-			if (org.getAddress().getGPS_Lati() == null || org.getAddress().getGPS_Lati().isBlank()
-					|| org.getAddress().getGPS_Long() == null || org.getAddress().getGPS_Long().isBlank()) {
-				continue;
-			}
-			MapPointsDto mp = new MapPointsDto();
-			mp.setId(org.getId());
-			mp.setType(Constants.MAP_TYPE_ORGANIZATION);
-			mp.setPoint(new Point(Double.parseDouble(org.getAddress().getGPS_Lati()),
-					Double.parseDouble(org.getAddress().getGPS_Long())));
-			mp.setName(org.getName());
-			mapPoint.add(mp);
-		}
-
-		return mapPoint;
-	}
-
-	public List<MapPointsDto> findSOS(double la, double lo, double radius) {
-		List<SOS> SOSs = SOSRepository.findAll();
-		List<MapPointsDto> mapPoint = new ArrayList<MapPointsDto>();
-		for (SOS sos : SOSs) {
-			if (sos.getAddress().getGPS_Lati() == null || sos.getAddress().getGPS_Lati().isBlank()
-					|| sos.getAddress().getGPS_Long() == null || sos.getAddress().getGPS_Long().isBlank()) {
-				continue;
-			}
-			MapPointsDto mp = new MapPointsDto();
-			mp.setId(sos.getId());
-			mp.setType(Constants.MAP_TYPE_SOS);
-			mp.setPoint(new Point(Double.parseDouble(sos.getAddress().getGPS_Lati()),
-					Double.parseDouble(sos.getAddress().getGPS_Long())));
-			mapPoint.add(mp);
-		}
-
-		return mapPoint;
-	}
-
-	@Override
-	public List<MapPointsDto> findAllPoints(double la, double lo, double radius) {
-		// TODO Auto-generated method stub
-		List<ReliefPoint> rps = reliefPointRepository.findAll();
-		List<Store> stores = storeRepository.findAll();
-		List<Organization> orgs = organizationRepository.findAll();
-
-		List<MapPointsDto> mapPoint = new ArrayList<MapPointsDto>();
-
-		for (ReliefPoint rp : rps) {
-			MapPointsDto mp = new MapPointsDto();
-			if (rp.getAddress().getGPS_Lati() == null || rp.getAddress().getGPS_Lati().isBlank()
-					|| rp.getAddress().getGPS_Long() == null || rp.getAddress().getGPS_Long().isBlank()) {
-				continue;
-			}
-			mp.setId(rp.getId());
-			mp.setType(Constants.MAP_TYPE_RELIEFPOINT);
-			mp.setPoint(new Point(Double.parseDouble(rp.getAddress().getGPS_Lati()),
-					Double.parseDouble(rp.getAddress().getGPS_Long())));
-			mp.setName(rp.getName());
-			mapPoint.add(mp);
-		}
-
-		for (Store store : stores) {
-			if (store.getLocation().getGPS_Lati() == null || store.getLocation().getGPS_Lati().isBlank()
-					|| store.getLocation().getGPS_Long() == null || store.getLocation().getGPS_Long().isBlank()) {
-				continue;
-			}
-			MapPointsDto mp = new MapPointsDto();
-			mp.setId(store.getId());
-			mp.setType(Constants.MAP_TYPE_STORE);
-			mp.setPoint(new Point(Double.parseDouble(store.getLocation().getGPS_Lati()),
-					Double.parseDouble(store.getLocation().getGPS_Long())));
-			mp.setName(store.getName());
-			mapPoint.add(mp);
-		}
-
-		for (Organization org : orgs) {
-			if (org.getAddress().getGPS_Lati() == null || org.getAddress().getGPS_Lati().isBlank()
-					|| org.getAddress().getGPS_Long() == null || org.getAddress().getGPS_Long().isBlank()) {
-				continue;
-			}
-			MapPointsDto mp = new MapPointsDto();
-			mp.setId(org.getId());
-			mp.setType(Constants.MAP_TYPE_ORGANIZATION);
-			mp.setPoint(new Point(Double.parseDouble(org.getAddress().getGPS_Lati()),
-					Double.parseDouble(org.getAddress().getGPS_Long())));
-			mp.setName(org.getName());
-			mapPoint.add(mp);
-		}
-
-		mapPoint = mapPoint.stream().filter((mp) -> {
-			double distance = distanceBetween2Points(mp.getPoint().getX(), mp.getPoint().getY(), la, lo);
-			if (distance > radius)
-				return false;
-			return true;
-		}).collect(Collectors.toList());
-
-		return mapPoint;
-	}
 
 	public void search(String searchStr) {
 		// TODO Auto-generated method stub
@@ -317,16 +147,37 @@ public class MapSerivceImpl implements MapService {
 		for (Object[] obj : mapPoints) {
 			MapPointsDto mp = new MapPointsDto();
 			BigInteger id = (BigInteger) obj[0];
-			BigInteger user_id = (BigInteger) obj[4];
+			//BigInteger user_id = (BigInteger) obj[4];
 			mp.setId(id.longValue());
 			mp.setName((String) obj[1]);
 			mp.setPoint(new Point(Double.valueOf(obj[2].toString()), Double.valueOf(obj[3].toString())));
-			mp.setType((String) obj[5]);
-			mp.setUser_id(user_id.longValue());
+			mp.setType((String) obj[4]);
+			//mp.setUser_id(user_id.longValue());
 			lstMapPoints.add(mp);
 		}
 
 		return lstMapPoints;
+	}
+
+	@Override
+	public boolean checkIsOwnPoint(User u, Long p_id, String type) {
+		// TODO Auto-generated method stub
+		if(type.equalsIgnoreCase(Constants.MAP_TYPE_RELIEFPOINT)) {
+			boolean rs = reliefPointRepository.checkIsOwnRp(p_id, u.getId());
+			return rs;
+			
+		}else if(type.equalsIgnoreCase(Constants.MAP_TYPE_SOS)) {
+			if(u.getUser_sos().getId() == p_id) {
+				return true;
+			}else {
+				return false;
+			}
+		}else if(type.equalsIgnoreCase(Constants.MAP_TYPE_STORE)) {
+			boolean rs = storeRepository.checkIsOwnST(p_id,u.getId());
+			return rs;
+		}
+		
+		return false;
 	}
 
 }
