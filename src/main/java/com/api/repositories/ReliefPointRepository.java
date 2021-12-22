@@ -55,7 +55,7 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 	@Modifying
 	@Transactional
 	@Query("update ReliefPoint rp set rp.status = :status where rp.id = :rId")
-	void updateUser(@Param("rId") Long rId, @Param("status") String status);
+	void updateUser(@Param("rId") Long rId, @Param("status") int status);
 	
 	@Query("select CASE  WHEN count(rp)> 0 THEN true ELSE false END from User u inner join u.reliefPoints rp where u.id = :uId and rp.id = :rpId")
 	boolean checkIsOwnRp(@Param("rpId") Long rpId, @Param("uId") Long uId);
