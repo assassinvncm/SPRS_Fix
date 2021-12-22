@@ -122,5 +122,17 @@ public class GroupServiceImpl implements GroupService{
 		});
 		return lstRs;
 	}
+
+	@Override
+	public List<Group> getGroupNotification() {
+		List<Group> lstRs = new ArrayList<Group>();
+		List<Group> lstTemp = groupRepo.findAll();
+		lstTemp.forEach(g ->{
+			if(!g.getCode().equals(Constants.SYSTEM_ADMIN_PER_CODE) && !g.getCode().equals(Constants.ORG_USER_PER_CODE)) {
+				lstRs.add(g);
+			}
+		});
+		return lstRs;
+	}
 	
 }
