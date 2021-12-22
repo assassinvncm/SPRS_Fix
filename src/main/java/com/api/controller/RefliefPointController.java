@@ -274,7 +274,7 @@ public class RefliefPointController {
 		ReliefPoint ReliefPoint = reliefPointService.updateStatusReliefPoint(id, status);
 		logger.info("End updateStatus");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
-				"Update status relief point By ID " + ReliefPoint.getId() + " success", "", ReliefPoint, null));
+				"Update status relief point By ID " + ReliefPoint.getId() + " success", "", mapStruct.reliefPointToreliefPointDto(ReliefPoint), null));
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)

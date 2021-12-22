@@ -405,7 +405,9 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		ReliefPoint rp = reliefPointRepository.findById(rId)
 				.orElseThrow(() -> new AppException(402, "ReliefPoint not exist"));
 		rp.setStatus(status);
-		return reliefPointRepository.save(rp);
+		reliefPointRepository.updateUser(rId, status);
+		rp.setStatus(status);
+		return rp;
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 	@Modifying
 	@Transactional
 	@Query("update ReliefPoint rp set rp.status = :status where rp.id = :rId")
-	void updateUser(@Param("rId") Long rId, @Param("status") String status);
+	void updateUser(@Param("rId") Long rId, @Param("status") int status);
 
 //	@Query("select rp from User u inner join u.reliefPoints rp inner join rp.reliefInformations rif inner join rif.item i where u.id = :uId and (rp.status =:status or i.id = :typeId)")
 //	Slice<ReliefPoint> findByTypeOrStatus(@Param("uId") Long uId,@Param("typeId") Long typeId ,@Param("status") Boolean status,Pageable pageRequest);
