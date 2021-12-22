@@ -8,6 +8,7 @@ public interface GroupService {
 	List<Group> getAllGroupAuthoriedByUser(Long user_id);
 	List<Group> getAllGroupUnAuthoriedByUser(Long user_id);
 	List<Group> getAll();
+	List<Group> getGroupNotification();
 	List<Group> getAllGroupForRegister(int level);
 	Group getById(Long id);
 	Group createGroup(Group g);

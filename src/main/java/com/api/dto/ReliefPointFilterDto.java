@@ -13,7 +13,7 @@ public class ReliefPointFilterDto {
 	private List<Long> types;
 	
 	@JsonProperty("status")
-	private Boolean status;
+	private int status;
 	
 	@JsonProperty("sort")
 	private Boolean sort;
@@ -32,7 +32,7 @@ public class ReliefPointFilterDto {
 		super();
 	}
 
-	public ReliefPointFilterDto(List<Long> types, Boolean status, Boolean sort, @NotNull int pageSize,
+	public ReliefPointFilterDto(List<Long> types, int status, Boolean sort, @NotNull int pageSize,
 			@NotNull int pageIndex) {
 		super();
 		this.types = types;
@@ -50,11 +50,11 @@ public class ReliefPointFilterDto {
 		this.types = types;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

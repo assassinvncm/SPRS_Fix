@@ -57,6 +57,14 @@ public class GroupController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get all groups success", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
 
+	@RequestMapping(value = "/groups-notification", method = RequestMethod.GET)
+	public ResponseEntity<?> getGroupNotification() {
+		logger.info("Start getGroupNotification");
+		List<Group> listGroup = groupServ.getGroupNotification();
+		logger.info("End getGroupNotification");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get getGroupNotification", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
 	@RequestMapping(value = "/groups-register-orgUser", method = RequestMethod.GET)
 	public ResponseEntity<?> getGroupForOrgzUserRegister() {
 		logger.info("Start get all Group for organize user register");

@@ -28,7 +28,7 @@ public class ReliefPointRepositoryCustomImpl implements ReliefPointRepositoryCus
 		// TODO Auto-generated method stub
 
 		List<Long> types = reliefPointFilterDto.getTypes();
-		Boolean status = reliefPointFilterDto.getStatus();
+		int status = reliefPointFilterDto.getStatus();
 
 		//HashMap<String, String> sort = reliefPointFilterDto.getSort();
 		Boolean sort = reliefPointFilterDto.getSort();
@@ -51,7 +51,7 @@ public class ReliefPointRepositoryCustomImpl implements ReliefPointRepositoryCus
 		}
 		
 		//status
-		if (null != status) {
+		if (4 != status) {
 			queryString = queryString.concat(" ").concat("AND rp.status = :status");
 			count++;
 			params.put(count, "status");
@@ -104,7 +104,7 @@ public class ReliefPointRepositoryCustomImpl implements ReliefPointRepositoryCus
 		// TODO Auto-generated method stub
 
 		List<Long> types = reliefPointFilterDto.getTypes();
-		Boolean status = reliefPointFilterDto.getStatus();
+		int status = reliefPointFilterDto.getStatus();
 
 		//HashMap<String, String> sort = reliefPointFilterDto.getSort();
 		Boolean sort = reliefPointFilterDto.getSort();
@@ -127,7 +127,7 @@ public class ReliefPointRepositoryCustomImpl implements ReliefPointRepositoryCus
 		}
 		
 		//status
-		if (null != status) {
+		if (4 != status) {
 			queryString = queryString.concat(" ").concat("AND rp.status = :status");
 			count++;
 			params.put(count, "status");
