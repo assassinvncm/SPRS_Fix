@@ -27,4 +27,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 			+ "SET nr.status = :status \r\n"
 			+ "where u.reveiver_id = :uId AND nr.status = 'uncheck'",nativeQuery = true)
 	int updateUnCheckStatusByUserId(@RequestParam("uId") Long uId,@RequestParam("status") String status);
+	
+//	@Query(value = "SELECT nr from Notification nr INNER JOIN nr.receivers u where u.id = :uId")
+//	Page<Notification> getNotificationsByAdmin(@RequestParam("uId") Long uId, Pageable pageable);
 }

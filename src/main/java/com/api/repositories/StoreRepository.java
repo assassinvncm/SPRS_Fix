@@ -35,4 +35,7 @@ public interface StoreRepository extends JpaRepository<Store, Long>{
 	@Transactional
 	@Procedure(procedureName = "prc_store_delete")
 	String deleteStore(@Param("p_id") long p_id);
+	
+	@Query("select CASE  WHEN count(st)> 0 THEN true ELSE false END from User u inner join u.lstStore st where u.id = :uId and st.id = :stId")
+	boolean checkIsOwnST(@Param("stId") Long rpId, @Param("uId") Long uId);
 }

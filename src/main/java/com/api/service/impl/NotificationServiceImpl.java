@@ -436,4 +436,18 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
+	@Override
+	public PagingResponse<NotificationDto> getNotificationByAdmin(User user, int pageIndex, int pageSize) {
+		// TODO Auto-generated method stub
+		Sort sort = Sort.by("create_time").descending();
+		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
+		Page<Notification> lstNotification = notificationRepository.getNotifications(user.getId(), pageable);
+
+		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
+		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
+		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
+		pagingResonpne.setTotalRecord(lstNotification.getTotalElements());
+		return pagingResonpne;
+	}
+
 }

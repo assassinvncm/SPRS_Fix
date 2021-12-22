@@ -659,7 +659,7 @@ class ReliefPointServiceImplTest {
     @Test
     void testGetEvent_UTCID01() {
         // Setup
-        final ReliefPointFilterDto reliefPointFilterDto = new ReliefPointFilterDto(Arrays.asList((long)1,(long)2,(long)3,(long)4), false, false, 0, 0);
+        final ReliefPointFilterDto reliefPointFilterDto = new ReliefPointFilterDto();
 
         // Configure ReliefPointRepository.findByTypeOrStatusEv(...).
         final ReliefPoint reliefPoint = new ReliefPoint();
@@ -781,7 +781,7 @@ class ReliefPointServiceImplTest {
     @Test
     void testGetEvent_UTCID02() {
         // Setup
-    	final ReliefPointFilterDto reliefPointFilterDto = new ReliefPointFilterDto(Arrays.asList((long)1,(long)2,(long)3,(long)4), false, false, 0, 0);
+    	final ReliefPointFilterDto reliefPointFilterDto = new ReliefPointFilterDto();
 
         when(reliefPointRepository.findByTypeOrStatusEv((long) 1, reliefPointFilterDto)).thenReturn(Collections.emptyList());
 

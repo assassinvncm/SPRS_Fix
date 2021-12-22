@@ -89,4 +89,11 @@ public interface NotificationService {
 	 * @param admin
 	 */
 	void adminSendNotification(AdminPushNotifcationRequest admPsn, User admin);
+	
+	/**
+	 * get notification by admin
+	 * @param user
+	 * @return
+	 */
+	PagingResponse<NotificationDto> getNotificationByAdmin(User user, int pageIndex, int pageSize);
 }
