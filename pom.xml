@@ -122,7 +122,6 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
         <!-- Source directory configuration -->
-        <sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
