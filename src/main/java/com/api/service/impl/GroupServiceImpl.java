@@ -55,7 +55,7 @@ public class GroupServiceImpl implements GroupService{
 				if(group2.getId() == group.getId()) {
 					check = 0;
 				}
-				if(group.getCode().equals(Constants.SYSTEM_ADMIN_PER_CODE) || group.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				if(group.getCode().equals(Constants.SYSTEM_ADMIN_PER_CODE) || group.getCode().equals(Constants.ORG_ADMIN_PER_CODE)|| group.getCode().equals(Constants.ORG_USER_PER_CODE)) {
 					check = 0;
 				}
 			}
