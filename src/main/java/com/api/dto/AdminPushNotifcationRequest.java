@@ -3,6 +3,7 @@ package com.api.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,10 +11,12 @@ public class AdminPushNotifcationRequest {
 	
 	@JsonProperty("title")
 	@NotBlank
+	@NotEmpty
 	private String title;
 	
 	@JsonProperty("message")
 	@NotBlank
+	@NotEmpty
 	private String message;
 	
 	@JsonProperty("groupUsers")

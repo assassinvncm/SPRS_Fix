@@ -1,5 +1,6 @@
 package com.api.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,8 @@ public class MapController {
 			@RequestParam("p_id") long p_id,@RequestParam("p_type") String type) {
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 		boolean rs =  mapService.checkIsOwnPoint(user, p_id, type);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Check is own point", "", rs, null));
+		HashMap<String, Boolean> status = new HashMap<String, Boolean>();
+		status.put("isOwnPoint", rs);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Check is own point", "", status, null));
 	}
 }

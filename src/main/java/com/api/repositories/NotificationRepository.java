@@ -14,7 +14,7 @@ import com.api.entity.Notification;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	@Query(value = "SELECT nr from Notification nr INNER JOIN nr.receivers u where u.id = :uId")
+	@Query(value = "SELECT nr from Notification nr INNER JOIN nr.sender_user u where u.id = :uId")
 	Page<Notification> getNotifications(@RequestParam("uId") Long uId, Pageable pageable);
 
 	@Query(value = "SELECT count(nr) from Notification nr INNER JOIN nr.receivers u where u.id = :uId and nr.status = :status")
