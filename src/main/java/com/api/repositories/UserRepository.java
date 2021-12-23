@@ -33,10 +33,10 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("update User u set u.password = :newPass where u.id = :uId")
 	void updateUser(@Param("uId") Long id, @Param("newPass") String newPass);
 
-	@Query("SELECT u FROM User u inner join u.groups_user gu WHERE :name IS NULL OR :name = '' OR u.username LIKE %:name% and gu.id in (1,7)")
+	@Query("SELECT distinct u FROM User u inner join u.groups_user gu WHERE :name IS NULL OR :name = '' OR u.username LIKE %:name% and gu.id in (1,7)")
 	Page<User> searchByNameLike(@Param("name") String name, Pageable pageable);
 
-	@Query("select u from User u where u.organization.id = :orgId and u.id != :uId and (:name IS NULL OR :name = '' OR u.username LIKE %:name%)")
+	@Query("select distinct u from User u where u.organization.id = :orgId and u.id != :uId and (:name IS NULL OR :name = '' OR u.username LIKE %:name%)")
 	Page<User> getOwnOrganizeUser(@Param("orgId") Long orgId, @Param("uId") Long uId, @Param("name") String name,
 			Pageable pageable);//
 
