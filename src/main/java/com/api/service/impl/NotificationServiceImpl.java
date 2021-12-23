@@ -184,7 +184,6 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		log.info("START save notification to user that subcribe STORE ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByStoreId(store.getId());
-		List<Notification> notifications = new ArrayList<Notification>();
 		List<String> lstToken = new ArrayList<String>();
 
 		List<User> user = new ArrayList<User>();
@@ -300,8 +299,8 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setReceiver(lstUser);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-		log.info("END save notification to user that subcribe RELIEFPOINT ");
-		log.info("START sent notification to user that subcribe RELIEFPOINT ");
+		log.info("END save notification of SOS ");
+		log.info("START sent notification to the same city ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -310,12 +309,12 @@ public class NotificationServiceImpl implements NotificationService {
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("id", String.valueOf(notificationRes.getId()));
 		data.put("type", notificationRes.getType());
-		// data.put("sender", String.valueOf(rp.getId()));
+		data.put("sender", String.valueOf(user.getUser_sos().getId()));
 		pushNotificationRequest.setData(data);
 
 		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
-		log.info("END sent notification to user that subcribe RELIEFPOINT ");
+		log.info("END sent notification to user that in the same city ");
 	}
 
 	@Override

@@ -120,7 +120,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 	
 	
-	public boolean checkCreateRp(User user) {
+	public boolean checkAllowCreateRp(User user) {
 		boolean rs = true;
 		List<Group> lstGroup = user.getGroups_user();
 		for(Group g: lstGroup) {
@@ -167,6 +167,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	@Override
 	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto, User user) {
 		// TODO Auto-generated method stub
+		
+		if(!checkAllowCreateRp(user)) {
+			throw new AppException(403,"Bạn chỉ được phép tạo tối đa 2 điểm cứu trợ");
+		}
+		
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
 		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
 			rf.setReliefPoint(reliefPoint);
