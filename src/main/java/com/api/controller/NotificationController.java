@@ -94,7 +94,7 @@ public class NotificationController {
 	}
 
 	@GetMapping("/get-all")
-	public ResponseEntity<?> updateStatusNotification(@RequestHeader("Authorization") String requestTokenHeader,
+	public ResponseEntity<?> getNotificationByUser(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize) {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
