@@ -10,10 +10,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.exception.AppException;
+
 
 public class DateUtils {
 
@@ -148,6 +151,27 @@ public class DateUtils {
 		SimpleDateFormat f = new SimpleDateFormat(formatDate);
 		String date = f.format(dates);
 		return date;
+	}
+	
+	public static List<String> getLabel12Month(){
+		List<String> rs = new ArrayList<String>();
+		for(int i=11; i>=0;i--) {
+			rs.add(getElementOfDate(getMonthAgo("yyyy-MM-dd", i), 1)+"-"+getElementOfDate(getMonthAgo("yyyy-MM-dd", i), 0));
+		}
+		return rs;
+	}
+	
+	public static List<String> getLabel30Day(){
+		List<String> rs = new ArrayList<String>();
+		for(int i=29; i>=0;i--) {
+			rs.add(getElementOfDate(getDateAgo("yyyy-MM-dd", i), 2)+"-"+getElementOfDate(getDateAgo("yyyy-MM-dd", i), 1)+"-"+getElementOfDate(getDateAgo("yyyy-MM-dd", i), 0));
+		}
+		return rs;
+	}
+	
+	public static String getElementOfDate(String date, int index) {
+		String[] temp = date.split("-");
+		return String.valueOf(Integer.parseInt(temp[index]));
 	}
 
 	public static String getCurrentDate(String formatDate) {
