@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import com.api.entity.Permission;
 import com.jwt.config.JwtTokenUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,14 +53,23 @@ public class Ultilities {
         return sql;
 	}
 	
-	public static List<String> getLabelReport(List<String> arrListNumber) {
+	public static List<String> removeDuplicateElement(List<String> arrListNumber) {
 		List<String> arrTemp = new ArrayList<String>();
 	    for (int i = 0; i < arrListNumber.size(); i++) {
 	        if (!arrTemp.contains(arrListNumber.get(i))) {
 	            arrTemp.add(arrListNumber.get(i));
 	        }
 	    }
-	    arrTemp.sort(Comparator.naturalOrder());
+	    return arrTemp;
+	}
+	
+	public static List<Permission> removeDuplicatePermission(List<Permission> arrListNumber) {
+		List<Permission> arrTemp = new ArrayList<Permission>();
+	    for (int i = 0; i < arrListNumber.size(); i++) {
+	        if (!arrTemp.contains(arrListNumber.get(i))) {
+	            arrTemp.add(arrListNumber.get(i));
+	        }
+	    }
 	    return arrTemp;
 	}
 	
