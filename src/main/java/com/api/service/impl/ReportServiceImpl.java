@@ -27,9 +27,9 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Override
 	public Map<String, Object> getReportYear(ReportDto rpdto) {
-		String group_by = "m_month";
+		String group_by = "m_month, m_year";
 		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
-		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 12);
+		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 11);
 		String type_point = "";
 		rpdto.setDate_from(monthAgo);
 		rpdto.setDate_to(currDate);
@@ -48,14 +48,12 @@ public class ReportServiceImpl implements ReportService{
 				, group_by);
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
 		List<String> labels = new ArrayList<String>();
 		List<Integer> values1 = new ArrayList<Integer>();
 		List<Integer> values2 = new ArrayList<Integer>();
 		List<Integer> values3 = new ArrayList<Integer>();
 		List<Integer> values4 = new ArrayList<Integer>();
-		lstRs.forEach(l -> labelsTemp.add(l.getYear()+"-"+l.getMonth()));
-		labels = Ultilities.getLabelReport(labelsTemp);
+		labels = DateUtils.getLabel12Month();
 
 		for (String label : labels) {
 			boolean isVal1 = false;
@@ -63,19 +61,19 @@ public class ReportServiceImpl implements ReportService{
 			boolean isVal3 = false;
 			boolean isVal4 = false;
 			for (ReportResultDto reportResultDto : lstRs) {
-				if(label.equals(reportResultDto.getYear()+"-"+reportResultDto.getMonth()) && reportResultDto.getType_point() == 1) {
+				if(label.equals(reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 1) {
 					values1.add((int)reportResultDto.getTotal());
 					isVal1 = true;
 				}
-				if(label.equals(reportResultDto.getYear()+"-"+reportResultDto.getMonth()) && reportResultDto.getType_point() == 2) {
+				if(label.equals(reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 2) {
 					values2.add((int)reportResultDto.getTotal());
 					isVal2 = true;
 				}
-				if(label.equals(reportResultDto.getYear()+"-"+reportResultDto.getMonth()) && reportResultDto.getType_point() == 3) {
+				if(label.equals(reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 3) {
 					values3.add((int)reportResultDto.getTotal());
 					isVal3 = true;
 				}
-				if(label.equals(reportResultDto.getYear()+"-"+reportResultDto.getMonth()) && reportResultDto.getType_point() == 4) {
+				if(label.equals(reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 4) {
 					values4.add((int)reportResultDto.getTotal());
 					isVal4 = true;
 				}
@@ -115,9 +113,9 @@ public class ReportServiceImpl implements ReportService{
 
 	@Override
 	public Map<String, Object> getReportMonth(ReportDto rpdto) {
-		String group_by = "m_day";
+		String group_by = "m_day, m_month, m_year";
 		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
-		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 30);
+		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 29);
 		String type_point = "";
 		rpdto.setDate_from(dayAgo);
 		rpdto.setDate_to(currDate);
@@ -136,14 +134,12 @@ public class ReportServiceImpl implements ReportService{
 				, group_by);
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
 		List<String> labels = new ArrayList<String>();
 		List<Integer> values1 = new ArrayList<Integer>();
 		List<Integer> values2 = new ArrayList<Integer>();
 		List<Integer> values3 = new ArrayList<Integer>();
 		List<Integer> values4 = new ArrayList<Integer>();
-		lstRs.forEach(l -> labelsTemp.add(l.getDay()+"-"+l.getMonth()+"-"+l.getYear()));
-		labels = Ultilities.getLabelReport(labelsTemp);
+		labels = DateUtils.getLabel30Day();
 
 		for (String label : labels) {
 			boolean isVal1 = false;
@@ -202,9 +198,9 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Override
 	public Map<String, Object> getReportYearORG(ReportDto rpdto) {
-		String group_by = "m_month";
+		String group_by = "m_month, m_year";
 		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
-		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 12);
+		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 11);
 		String type_point = "";
 		rpdto.setDate_from(monthAgo);
 		rpdto.setDate_to(currDate);
@@ -224,13 +220,25 @@ public class ReportServiceImpl implements ReportService{
 				, rpdto.getOrg_id());
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
+		List<Integer> values1 = new ArrayList<Integer>();
 		List<String> labels = new ArrayList<String>();
-		lstRs.forEach(l -> labelsTemp.add(l.getYear()+"-"+l.getMonth()));
-		labels = Ultilities.getLabelReport(labelsTemp);
-
+		labels = DateUtils.getLabel12Month();
+		
+		for (String label : labels) {
+			boolean isVal1 = false;
+			for (ReportResultDto reportResultDto : lstRs) {
+				if(label.equals(reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 1) {
+					values1.add((int)reportResultDto.getTotal());
+					isVal1 = true;
+				}
+			}
+			if(!isVal1) {
+				values1.add(0);
+			}
+		}
+		
 		Map<String, Object> data = new HashMap<>();
-		data.put("ReliefPoint", lstRs);
+		data.put("ReliefPoint", values1);
 		Map<String, Object> response = new HashMap<>();
         response.put("data", data);
         response.put("label", labels);
@@ -239,7 +247,7 @@ public class ReportServiceImpl implements ReportService{
 
 	@Override
 	public Map<String, Object> getReportMonthORG(ReportDto rpdto) {
-		String group_by = "m_day";
+		String group_by = "m_day, m_month, m_year";
 		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
 		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 30);
 		String type_point = "";
@@ -261,13 +269,25 @@ public class ReportServiceImpl implements ReportService{
 				, rpdto.getOrg_id());
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
+		List<Integer> values1 = new ArrayList<Integer>();
 		List<String> labels = new ArrayList<String>();
-		lstRs.forEach(l -> labelsTemp.add(l.getDay()+"-"+l.getMonth()+"-"+l.getYear()));
-		labels = Ultilities.getLabelReport(labelsTemp);
+		labels = DateUtils.getLabel30Day();
+		
+		for (String label : labels) {
+			boolean isVal1 = false;
+			for (ReportResultDto reportResultDto : lstRs) {
+				if(label.equals(reportResultDto.getDay()+"-"+reportResultDto.getMonth()+"-"+reportResultDto.getYear()) && reportResultDto.getType_point() == 1) {
+					values1.add((int)reportResultDto.getTotal());
+					isVal1 = true;
+				}
+			}
+			if(!isVal1) {
+				values1.add(0);
+			}
+		}
 
 		Map<String, Object> data = new HashMap<>();
-		data.put("ReliefPoint", lstRs);
+		data.put("ReliefPoint", values1);
 		Map<String, Object> response = new HashMap<>();
         response.put("data", data);
         response.put("label", labels);
