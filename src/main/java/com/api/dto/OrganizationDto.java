@@ -1,12 +1,14 @@
 package com.api.dto;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 import javax.json.bind.annotation.JsonbProperty;
 
 import com.api.entity.Address;
 import com.api.entity.Request;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -33,7 +35,7 @@ public class OrganizationDto {
 	@JsonbProperty("name")
 	private String name;
 	
-	@JsonbProperty("founded")
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
 	private Date founded;
 
 	@JsonbProperty("description")
