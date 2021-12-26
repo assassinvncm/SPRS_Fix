@@ -42,6 +42,16 @@ public class DateUtils {
 			return null;
 		return new java.sql.Timestamp(date.getTime());
 	}
+	
+	/**
+	 * convert
+	 * @param uDate
+	 * @return
+	 */
+	public static java.sql.Date convertUtilToSqlDate(java.util.Date uDate) {
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+        return sDate;
+    }
 
 	/**
 	 * 

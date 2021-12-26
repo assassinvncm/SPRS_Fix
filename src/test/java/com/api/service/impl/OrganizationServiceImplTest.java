@@ -67,22 +67,22 @@ class OrganizationServiceImplTest {
 		assertEquals(2, orgDtoRes.get(0).getId());
 	}
 
-	@Test
-	public void testUpdateOrganzization_UTCID01() {
-		// set data input
-		OrganizationDto orgDto = new OrganizationDto();
-
-		// data mock
-		Organization org = new Organization();
-		org.setId(2);
-
-		// mock call function
-		Mockito.when(mapStructMapper.organizationDtoToOrganization(orgDto)).thenReturn(org);
-		Mockito.when(organizationRepository.save(org)).thenReturn(org);
-
-		// call method
-		organizationService.updateOrganzization(orgDto);
-	}
+//	@Test
+//	public void testUpdateOrganzization_UTCID01() {
+//		// set data input
+//		OrganizationDto orgDto = new OrganizationDto();
+//
+//		// data mock
+//		Organization org = new Organization();
+//		org.setId(2);
+//
+//		// mock call function
+//		Mockito.when(mapStructMapper.organizationDtoToOrganization(orgDto)).thenReturn(org);
+//		Mockito.when(organizationRepository.save(org)).thenReturn(org);
+//
+//		// call method
+//		organizationService.updateOrganzization(orgDto);
+//	}
 
 	@Test
 	public void testGetOrganizationByUser_UTCID01() {
