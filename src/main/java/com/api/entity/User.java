@@ -118,6 +118,16 @@ public class User extends BaseEntity implements Serializable{
 	@JsonIgnore
 	private List<ReliefPoint> user_relief;
 	
+	private int isAvailable;
+	
+	public int getIsAvailable() {
+		return isAvailable;
+	}
+
+	public void setIsAvailable(int isAvailable) {
+		this.isAvailable = isAvailable;
+	}
+
 	/**
 	 * @return the user_relief
 	 */

@@ -109,6 +109,20 @@ public class RefliefPointController {
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Event of an organize!", "", lstReliefPoint, null));
 	}
+
+	@RequestMapping(value = "/get-admin-assign", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> getOwnReliefPointAdminAssign(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody SearchFilterDto sft) {
+		logger.info("Start get own Relief organize admin!");
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		Map<String, Object> lstReliefPoint = reliefPointService.getReliefPointsAdminAssign(userDto.getOrganization().getId(), sft);
+
+		logger.info("End get own Relief organize admin!");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Event of an organize!", "", lstReliefPoint, null));
+	}
 	
 	@RequestMapping(value = "/assign", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
@@ -143,7 +157,7 @@ public class RefliefPointController {
 		logger.info("Start getAllUnAssignUser suscess!");
 		List<User> lsRs = reliefPointService.getAllUnassignUser(rp_id, search);
 		logger.info("End getAllUnAssignUser suscess!");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All un-Assign User suscess!", "", mapStruct.lstUserToUserDto(lsRs), null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All un-Assign User suscess!", "", mapStruct.lstUserToUserDtoEv(lsRs), null));
 	}
 	@RequestMapping(value = "/update-admin", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")

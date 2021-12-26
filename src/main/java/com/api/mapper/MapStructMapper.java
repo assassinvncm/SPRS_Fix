@@ -47,11 +47,15 @@ public interface MapStructMapper {
 	
 	UserDto userToUserDto_forGet(User user);
 	
+	UserDto userToUserDto_forEv(User user);
+	
 	List<GroupDto> lstGroupToGroupDto(List<Group> lstGroup);
 	
 	List<PermissionDto> lstPermissionToPermissionDto(List<Permission> lstPermission);
 	
 	List<UserDto> lstUserToUserDto(List<User> lstUser);
+	
+	List<UserDto> lstUserToUserDtoEv(List<User> lstUser);
 	
 	List<UserDto> lstBanUserToBanUserDto(List<User> lstUser);
 	

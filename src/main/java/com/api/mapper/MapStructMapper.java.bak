@@ -37,6 +37,7 @@ import com.api.entity.User;
 public interface MapStructMapper {
 	
 	UserDto userToUserDto(User user);
+	UserDto userToUserDto_getUController(User user);
 	
 	AddressDto addressToAddressDto(Address address);
 	

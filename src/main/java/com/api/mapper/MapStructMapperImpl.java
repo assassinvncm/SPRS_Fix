@@ -127,6 +127,25 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
+	public UserDto userToUserDto_forEv(User user) {
+		// TODO Auto-generated method stub
+
+		if (user == null) {
+			return null;
+		}
+		UserDto udto = new UserDto();
+		udto.setId(user.getId());
+		udto.setUsername(user.getUsername());
+		udto.setPhone(user.getPhone());
+		udto.setAddress(addressToAddressDto(user.getAddress()));
+		udto.setFull_name(user.getFull_name());
+		udto.setDob(user.getDob());
+		udto.setStatus(user.getStatus());
+		udto.setIsAvailable(user.getIsAvailable());
+		return udto;
+	}
+
+	@Override
 	public List<GroupDto> lstGroupToGroupDto(List<Group> lstGroup) {
 		// TODO Auto-generated method stub
 
@@ -151,6 +170,21 @@ public class MapStructMapperImpl implements MapStructMapper {
 
 		List<UserDto> lstUserDto = lstUser.stream().map(user -> {
 			return userToUserDto_forGet(user);
+		}).collect(Collectors.toList());
+		
+		return lstUserDto;
+	}
+
+	@Override
+	public List<UserDto> lstUserToUserDtoEv(List<User> lstUser) {
+		// TODO Auto-generated method stub
+
+		if (lstUser == null) {
+			return null;
+		}
+
+		List<UserDto> lstUserDto = lstUser.stream().map(user -> {
+			return userToUserDto_forEv(user);
 		}).collect(Collectors.toList());
 		
 		return lstUserDto;

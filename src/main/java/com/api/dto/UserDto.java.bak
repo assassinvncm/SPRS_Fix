@@ -30,9 +30,6 @@ public class UserDto {
 	
 	@JsonProperty("dob")
 	private String dob;
-	
-	@JsonProperty("isAvailable")
-	private int isAvailable;
 
 	private Date create_time;
 	
@@ -79,18 +76,6 @@ public class UserDto {
 		this.groups_user = groups_user;
 		this.request = request;
 	}
-
-	public int getIsAvailable() {
-		return isAvailable;
-	}
-
-
-
-	public void setIsAvailable(int isAvailable) {
-		this.isAvailable = isAvailable;
-	}
-
-
 
 	/**
 	 * @return the images
