@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.api.dto.AdminPushNotifcationRequest;
@@ -399,7 +400,7 @@ public class NotificationServiceImpl implements NotificationService {
 			users.add(lstDevice.get(i).getUser());
 
 			
-			if(lstToken!= null) {
+			if(lstDevice.get(i).getToken()!= null) {
 				// add token to list
 				lstToken.add(lstDevice.get(i).getToken());
 				int count = i + 1;
@@ -467,5 +468,15 @@ public class NotificationServiceImpl implements NotificationService {
 		pagingResonpne.setTotalRecord(lstNotification.getTotalElements());
 		return pagingResonpne;
 	}
+	
+//	@Scheduled(cron = "0 0 5 * * ?")
+//	public void scheduleTaskWithCronExpression() {
+//	    log.info("Start send notification to user to notify of relief point");
+//	    //query db to get list reliefpoint sap dien ra
+//	    //send thông báo cho người dùng khi reliefpoint sap dien ra
+//	    this.sendPnsToDeviceWhenCreateReliefPoint(null, "");
+//	    log.info("End send notification to user to notify of relief point");
+//	    
+//	}
 
 }
