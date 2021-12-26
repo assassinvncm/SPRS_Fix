@@ -362,6 +362,26 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
+	public Map<String, Object> getReliefPointsAdminAssign(Long oId, SearchFilterDto filter) {
+		// TODO Auto-generated method stub
+		List<ReliefPointDto> lstRs = new ArrayList<ReliefPointDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	    	sortable = Sort.by("name").descending();
+	    }else {
+	    	sortable = Sort.by("name").ascending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
+		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPointAssign(oId, filter.getSearch(), pageable);
+		lstRs = mapStructMapper.lstReliefPointToreliefPointDto(pageStore.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("reliefs", lstRs);
+        response.put("currentPage", pageStore.getNumber());
+        response.put("totalItems", pageStore.getTotalElements());
+        response.put("totalPages", pageStore.getTotalPages());
+		return response;
+	}
+	@Override
 	public Map<String, Object> getReliefPointsAdmin(Long oId, SearchFilterDto filter) {
 		// TODO Auto-generated method stub
 		List<ReliefPointDto> lstRs = new ArrayList<ReliefPointDto>();

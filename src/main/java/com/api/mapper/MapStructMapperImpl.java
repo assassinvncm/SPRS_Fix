@@ -123,6 +123,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		udto.setFull_name(user.getFull_name());
 		udto.setDob(user.getDob());
 		udto.setStatus(user.getStatus());
+		udto.setIsActive(user.getIsActive());
 		return udto;
 	}
 

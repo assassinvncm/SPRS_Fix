@@ -237,7 +237,7 @@ public class UserSerivceImpl implements UserService {
 		user.setStatus(Constants.USER_STATUS_ACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUser_sos(new SOS(0, address,1));
+		user.setUser_sos(new SOS(1, address,1));
 		userRepository.save(user);
 //		sosServ.createSOS(user);
 		logger.info("End save User");
@@ -362,7 +362,7 @@ public class UserSerivceImpl implements UserService {
 		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUser_sos(new SOS(0, address,1));
+		user.setUser_sos(new SOS(1, address,1));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store",Constants.SOS_STATUS_REQUEST_STORE, user);
 		userRepository.save(user);
