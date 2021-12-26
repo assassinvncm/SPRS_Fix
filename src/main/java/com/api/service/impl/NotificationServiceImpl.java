@@ -395,22 +395,25 @@ public class NotificationServiceImpl implements NotificationService {
 
 		List<String> lstToken = new ArrayList<String>();
 		List<User> users = new ArrayList<User>();
+		int count = 0;
 		List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
 		for (int i = 0; i < lstDevice.size(); i++) {
 			users.add(lstDevice.get(i).getUser());
 
 			
-			if(lstDevice.get(i).getToken()!= null) {
+			if(lstDevice.get(i).getToken() != null) {
 				// add token to list
 				lstToken.add(lstDevice.get(i).getToken());
-				int count = i + 1;
-				// split batch to send notification 500/1request
-				if (count % 10 == 0 || i == lstDevice.size() - 1) {
-					PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
-					pushNotificationRequest.setTarget(lstToken);
-					lstPushNotificationRequest.add(pushNotificationRequest);
-					lstToken = new ArrayList<String>();
-				}
+				count++;
+			}
+			
+			// split batch to send notification 500/1request
+			if ((count != 0 && count % 10 == 0) || i == lstDevice.size() - 1) {
+				PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+				pushNotificationRequest.setTarget(lstToken);
+				lstPushNotificationRequest.add(pushNotificationRequest);
+				lstToken = new ArrayList<String>();
+				count = 0;
 			}
 
 		}
@@ -433,7 +436,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notificationRes = this.saveNotification(notification);
 		
 		//check if user don't login on device
-		if(lstToken.isEmpty()) {
+		if(!lstPushNotificationRequest.isEmpty()) {
 			// set data push notification
 			lstPushNotificationRequest = lstPushNotificationRequest.stream().map((noti) -> {
 				noti.setTitle(admPsn.getTitle());
