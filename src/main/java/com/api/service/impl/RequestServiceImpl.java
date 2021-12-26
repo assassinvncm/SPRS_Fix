@@ -6,9 +6,16 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.api.dto.NotificationDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.RequestDto;
+import com.api.entity.Notification;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.User;
@@ -39,11 +46,21 @@ public class RequestServiceImpl implements RequestService{
 	}
 
 	@Override
-	public List<Request> getRequestbySysAdmin(Long id) {
+	public PagingResponse<RequestDto> getRequestbySysAdmin(User user, String accType, int pageIndex, int pageSize, String search, String statusType) {
 		// TODO Auto-generated method stub
-		List<Request> req = requestRepository.findByGroup_id(id);
+		
+		Sort sort = Sort.by("timestamp").descending();
+		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
+		Long gid = user.getGroups_user().get(0).getId();
+		//List<Request> req = requestRepository.findByGroup_id(id);
 		//User r = req.getUser();
-		return req;
+		Page<Request> lstRequest = requestRepository.getRequestByAdmin(gid, accType, search, statusType, pageable);
+
+		PagingResponse<RequestDto> pagingResonpne = new PagingResponse<RequestDto>();
+		pagingResonpne.setObject(mapStructMapper.lstRequestToRequestDto(lstRequest.toList()));
+		pagingResonpne.setTotalPage(lstRequest.getTotalPages());
+		pagingResonpne.setTotalRecord(lstRequest.getTotalElements());
+		return pagingResonpne;
 	}
 	
 

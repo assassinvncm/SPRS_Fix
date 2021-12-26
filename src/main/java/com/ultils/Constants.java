@@ -67,4 +67,7 @@ public class Constants {
 	//Constant for status SOS
 	public static final int SOS_STATUS_TURNON = 1;
 	public static final int SOS_STATUS_TURNOF = 0;
+	//Constant for request Status
+	public static final String SOS_STATUS_REQUEST_STORE = "Store";
+	public static final String SOS_STATUS_REQUEST_ORG = "Organization";
 }

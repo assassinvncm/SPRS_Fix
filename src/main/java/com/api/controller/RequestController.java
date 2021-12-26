@@ -3,9 +3,12 @@ package com.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.Min;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.PagingResponse;
 import com.api.dto.RequestDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.UserDto;
@@ -59,13 +63,17 @@ public class RequestController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requestDtos, null));
 	}
 
-	@RequestMapping("/request-systemAdmin")
+	@GetMapping("/request-systemAdmin")
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
-	public ResponseEntity<?> getRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader) {
+	public ResponseEntity<?> getRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader, 
+			@RequestParam(required = false, value = "accountType", defaultValue = "") String accountType,
+			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize,
+			@RequestParam(required = false, value = "search", defaultValue = "") String search,
+			@RequestParam(required = false, value = "statusType", defaultValue = "") String statusType) {
 		
-		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
-		List<Request> requests = requestService.getRequestbySysAdmin(userDto.getGroups_user().get(0).getId());
-
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		//List<Request> requests = requestService.getRequestbySysAdmin(userDto.getGroups_user().get(0).getId());
+		PagingResponse<RequestDto> requests = requestService.getRequestbySysAdmin(user, accountType, pageIndex, pageSize,search, statusType);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requests, null));
 	}
 	

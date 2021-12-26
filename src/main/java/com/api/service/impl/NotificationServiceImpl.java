@@ -378,7 +378,9 @@ public class NotificationServiceImpl implements NotificationService {
 		List<Object[]> lstDeviceObj = deviceRepositoryCustom.getDeviceByAreasAndGroup(admPsn.getGroupUsers(),
 				admPsn.getSubdistrict_id(), admPsn.getDistrict_id(), admPsn.getCity_id());
 		List<Device> lstDevice = procedureMapper.getDevice(lstDeviceObj);
-
+		
+		//check have any user ??
+		
 		// set notification
 		Notification notification = new Notification();
 		notification.setTitle(admPsn.getTitle());

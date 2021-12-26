@@ -275,7 +275,7 @@ public class UserSerivceImpl implements UserService {
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
-		Request req = createRequestRegister("Request to register", null, user);
+		Request req = createRequestRegister("Request to register Organization", Constants.SOS_STATUS_REQUEST_ORG, user);
 
 		userRepository.save(user);
 		logger.info("End save Organization");
@@ -364,7 +364,7 @@ public class UserSerivceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setUser_sos(new SOS(1, address,1));
 		// user.setGroups_user(lstTem);G
-		Request req = createRequestRegister("request to create store", "Create Store", user);
+		Request req = createRequestRegister("request to create store",Constants.SOS_STATUS_REQUEST_STORE, user);
 		userRepository.save(user);
 		logger.info("Start save Request");
 		requestRepository.save(req);
@@ -384,16 +384,18 @@ public class UserSerivceImpl implements UserService {
 		req.setType(type);
 		req.setStatus(Constants.REQUEST_STATUS_UNCHECK);
 		req.setTimestamp(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+		Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
+		req.setGroup(g);
 		// đang hardcode (nên xem, check quyền tạo)
-		Group gOrg = groupRepository.findByCode(Constants.ORG_ADMIN_PER_CODE);
-		if (u.getGroups_user().get(0).getId() == gOrg.getId()) {
-			req.setOrganization(u.getOrganization());
-		} else {
-			Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
-			// sai set id. ID phải là id của admin
-//			g.setId(10);
-			req.setGroup(g);
-		}
+//		Group gOrg = groupRepository.findByCode(Constants.ORG_ADMIN_PER_CODE);
+//		if (u.getGroups_user().get(0).getId() == gOrg.getId()) {
+//			req.setOrganization(u.getOrganization());
+//		} else {
+//			Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
+//			// sai set id. ID phải là id của admin
+////			g.setId(10);
+//			req.setGroup(g);
+//		}
 
 		return req;
 	}

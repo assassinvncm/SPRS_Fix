@@ -2,6 +2,8 @@ package com.api.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +21,11 @@ public interface RequestRepository extends JpaRepository<Request, Long>{
 	
 	@Query("select r from Request r inner join r.organization where r.organization.id = :organizationId and r.status = :status")
 	List<Request> filterRequestOfOrgAdmin(@Param("organizationId") Long id,@Param("status") String status);
+	
+	@Query("Select r from Request r INNER JOIN r.group g INNER JOIN r.user u Where g.id = :gid "
+			+ "AND ('' = :accType OR r.type = :accType) "
+			+ "AND ('' = :search OR u.full_name LIKE %:search% OR u.username LIKE %:search%) "
+			+ "AND ('' = :statusType OR r.status = :statusType)")
+	Page<Request> getRequestByAdmin(@Param("gid") long gId,@Param("accType") String accType, 
+			@Param("search") String search,@Param("statusType") String statusType, Pageable pageable);
 }
