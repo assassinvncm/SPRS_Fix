@@ -248,7 +248,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update-event", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_EVENT')")
 	public ResponseEntity<?> updateEventORG(@RequestBody ReliefPointDto reliefPointDto) {
 		logger.info("Start updateEventORG");
 		ReliefPoint rp = reliefPointService.updateReliefPointORG(reliefPointDto);
@@ -268,7 +268,7 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/update-status", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF', 'PER_MOB_EVENT')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF', 'PER_MOB_EVENT', 'PER_ADMRLP_ACEN')")
 	public ResponseEntity<?> updateStatus(@RequestParam("id") Long id, @RequestParam("status") int status) {
 		logger.info("Start updateStatus");
 		ReliefPoint ReliefPoint = reliefPointService.updateStatusReliefPoint(id, status);

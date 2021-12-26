@@ -429,6 +429,33 @@ public class UserSerivceImpl implements UserService {
 		}
 	}
 
+
+	@SuppressWarnings("null")
+	@Override
+	public String getUsernameByPhoneAndCheckPlatform(String phone, int platform) {
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			if(!u.isEmpty()) {
+				int check = 1;
+				List<Group> lstTem = u.get().getGroups_user();
+				for (Group group : lstTem) {
+					if(group.getPlatform()==platform) {
+						check = 0;
+					}
+				}
+				if(check == 1) {
+					throw new AppException(405, "User is not available in this platform");
+				}
+				return u.get().getUsername();
+			}else {
+				throw new AppException(404, "Phone number not Found");
+			}
+		}else {
+			throw new AppException(404, "Phone number is undefined");
+		}
+	}
+	
 	@Override
 	public User getUserByPhone(String phone) {
 		User uRs = new User();
@@ -675,7 +702,7 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		u.setIsActive(false);
-		//u.setStatus(Constants.USER_STATUS_UNACTIVE);
+//		u.setStatus(Constants.USER_STATUS_UNACTIVE);
 		return userRepository.saveAndFlush(u);
 	}
 
@@ -686,7 +713,7 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		u.setIsActive(true);
-		//u.setStatus(Constants.USER_STATUS_ACTIVE);
+//		u.setStatus(Constants.USER_STATUS_ACTIVE);
 		return userRepository.saveAndFlush(u);
 	}
 

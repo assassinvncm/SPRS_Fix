@@ -63,10 +63,10 @@ public class OTPController {
 //		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //		String username = auth.getName();
 //		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
-		User user = userService.getUserByPhone(pojo.getTo());
+		String username = userService.getUsernameByPhoneAndCheckPlatform(pojo.getTo(), pojo.getPlatform());
 		
-		int otp = otpService.generateOTP(user.getUsername());
-		logger.info("OTP : " + otp +" of user: "+user.getUsername());
+		int otp = otpService.generateOTP(username);
+		logger.info("OTP : " + otp +" of user: "+username);
 		pojo.setMessage(Constants.OTP_MESSAGE+otp);
 		smsService.send(pojo);
 		logger.info("End generate OTP and send to: "+pojo.getTo());

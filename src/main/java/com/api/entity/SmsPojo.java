@@ -6,7 +6,14 @@ public class SmsPojo {
     private String message;
     private int otp;
     private String username;
+    private int platform;
     
+	public int getPlatform() {
+		return platform;
+	}
+	public void setPlatform(int platform) {
+		this.platform = platform;
+	}
 	/**
 	 * @return the username
 	 */

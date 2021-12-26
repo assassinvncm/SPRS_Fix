@@ -62,7 +62,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 		}
 		
 		if(user.getIsActive() != null && user.getIsActive() == false) {
-			throw new AuthenException("Account is not active");
+			throw new AuthenException("Tài khoản không được kích hoạt");
 		}
 
 		List<Group> lstGr = user.getGroups_user();
