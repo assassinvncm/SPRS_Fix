@@ -47,12 +47,6 @@ public interface ReliefPointService {
 	
 	/**
 	 * 
-	 * @return
-	 */
-	Map<String, Object> getReliefPointsAdminAssign(Long oId, SearchFilterDto filter);
-	
-	/**
-	 * 
 	 * @param uId
 	 * @param reliefPointFilterDto
 	 * @return

@@ -50,6 +50,9 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
+	@Column(name = "status")
+	private String status;
+	
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
@@ -78,7 +81,7 @@ public class User extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy="users")
     private List<Store> lstStore;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinTable(name = "SPRS_store_subcribe",
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="store_id"))
@@ -89,7 +92,7 @@ public class User extends BaseEntity implements Serializable{
 	@JsonIgnore
     private SOS user_sos;
 	
-	@OneToMany(mappedBy = "sender",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "sender_user",fetch = FetchType.LAZY)
 	private List<Notification> notifications_sender;
 	
 	@ManyToMany(mappedBy = "receivers")
@@ -107,6 +110,42 @@ public class User extends BaseEntity implements Serializable{
 	@Column(columnDefinition = "TIMESTAMP")
 	public Timestamp modified_date;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id")
+	private Image images;
+	
+	@ManyToMany(mappedBy = "relief_user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private List<ReliefPoint> user_relief;
+	
+	/**
+	 * @return the user_relief
+	 */
+	public List<ReliefPoint> getUser_relief() {
+		return user_relief;
+	}
+
+	/**
+	 * @param user_relief the user_relief to set
+	 */
+	public void setUser_relief(List<ReliefPoint> user_relief) {
+		this.user_relief = user_relief;
+	}
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
+
 	public List<Store> getLstStore() {
 		return lstStore;
 	}
@@ -285,4 +324,14 @@ public class User extends BaseEntity implements Serializable{
 		}
 		return rs;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 }

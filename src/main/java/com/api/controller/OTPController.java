@@ -173,7 +173,7 @@ public class OTPController {
 					User u = userService.findByUsername(username);
 					u.setPassword(passwordEncoder.encode(new_pass));
 					userRepository.save(u);
-					pojo.setMessage(Constants.RESET_PASSWORD_MESSAGE+new_pass);
+					pojo.setMessage("Bạn lấy lại mật khẩu cho tài khoản "+username+" thành công. "+Constants.RESET_PASSWORD_MESSAGE+new_pass);
 					smsService.send(pojo);
 					return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Cấp lại mật khẩu thành công", "", null, null));
 				} else {

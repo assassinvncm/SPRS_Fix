@@ -118,7 +118,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		UserDto udto = new UserDto();
 		udto.setId(user.getId());
 		udto.setUsername(user.getUsername());
-
+		udto.setPhone(user.getPhone());
+		udto.setAddress(addressToAddressDto(user.getAddress()));
+		udto.setFull_name(user.getFull_name());
+		udto.setDob(user.getDob());
+		udto.setStatus(user.getStatus());
 		return udto;
 	}
 
@@ -148,7 +152,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<UserDto> lstUserDto = lstUser.stream().map(user -> {
 			return userToUserDto_forGet(user);
 		}).collect(Collectors.toList());
-
+		
 		return lstUserDto;
 	}
 
@@ -421,6 +425,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
+
+		List<UserDto> lstURP = reliefPoint.getRelief_user().stream().map(
+			u -> {return userToUserDto(u);}
+		).collect(Collectors.toList());
+		reliefPointDto.setLstUser_rp(lstURP);
 		reliefPointDto.setReliefInformations(rpDto);
 		reliefPointDto.setImages(reliefPoint.getImages());
 
@@ -652,6 +661,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}
 		NotificationDto notiDto = new NotificationDto();
 		notiDto.setId(notification.getId());
+		notiDto.setTitle(notification.getTitle());
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());
@@ -662,7 +672,10 @@ public class MapStructMapperImpl implements MapStructMapper {
 			notiDto.setSender(storeToStoreDTO(notification.getStore()));
 		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_RELIEFPOINT)) {
 			notiDto.setSender(reliefPointToreliefPointDto(notification.getReliefPoint()));
-		}else {
+		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_SOS)) {
+			notiDto.setSender(SOSToSOSDto(notification.getSos()));
+		}
+		else{
 			notiDto.setSender(userToUserDto(notification.getSender()));
 		}
 
