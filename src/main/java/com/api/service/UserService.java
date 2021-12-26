@@ -38,6 +38,13 @@ public interface UserService {
 	 * @param phone number
 	 * @return username
 	 */
+	String getUsernameByPhoneAndCheckPlatform(String phone, int platform);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
 	User getUserByPhone(String phone);
 	
 	/**

@@ -50,6 +50,7 @@ import com.common.utils.DateUtils;
 import com.exception.AppException;
 import com.exception.ProcException;
 import com.ultils.Constants;
+import com.ultils.Ultilities;
 
 @Service
 public class ReliefPointServiceImpl implements ReliefPointService {
@@ -228,11 +229,17 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
 		reliefPoint.setRelief_user(rp.getRelief_user());
+		
+		if(rp.getStatus()!=3) {
+			int status = Ultilities.getStatusRelief(rp);
+			reliefPoint.setStatus(status);
+		}else {
+			reliefPoint.setStatus(rp.getStatus());
+		}
 		
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
@@ -268,28 +275,17 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
-		//reliefPoint.setCreate_by();
 		
-//		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
-//			ReliefInformation reliefInfor = new ReliefInformation();
-//			reliefInfor.setId(reliefInforDto.getId());
-//			reliefInfor.setItem(mapStructMapper.itemDtoToItem(reliefInforDto.getItem()));
-//			reliefInfor.setQuantity(reliefInforDto.getQuantity());
-//			reliefInfor.setReliefPoint(rp);
-//			return reliefInfor;
-//		}).collect(Collectors.toList());
-//		
-//		rp.setName(reliefPointDto.getName());
-//		rp.setDescription(reliefPointDto.getDescription());
-//		rp.setReliefInformations(lstReliefInfor);
-//		rp.setAddress(address);
-//		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-//		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-//		rp.setModified_date(DateUtils.getCurrentSqlDate());
+		if(rp.getStatus()!=3) {
+			int status = Ultilities.getStatusRelief(rp);
+			reliefPoint.setStatus(status);
+		}else {
+			reliefPoint.setStatus(rp.getStatus());
+		}
+		
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
 	@Override
@@ -323,11 +319,14 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
 		reliefPoint.setRelief_user(rp.getRelief_user());
+		
+		int status = Ultilities.getStatusRelief(rp);
+		reliefPoint.setStatus(status);
+		
 		return reliefPointRepository.save(reliefPoint);
 	}
 
@@ -411,7 +410,6 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 				.orElseThrow(() -> new AppException(402, "ReliefPoint not exist"));
 		rp.setStatus(status);
 		reliefPointRepository.updateUser(rId, status);
-		rp.setStatus(status);
 		return rp;
 	}
 
@@ -499,7 +497,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 			throw new AppException(403, "Relief point is not existed!");
 		}
 		List<User> lstAssign = rp.getRelief_user();
-		List<User> lstAll = userRepo.getUserInOrg(rp.getOrganization().getId());
+		List<User> lstAll = userRepo.getUserInOrgActive(rp.getOrganization().getId());
 		for (User u : lstAll) {
 			int check = 1;
 			for (User u2 : lstAssign) {

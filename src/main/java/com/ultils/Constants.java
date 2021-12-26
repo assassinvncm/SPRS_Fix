@@ -20,7 +20,7 @@ public class Constants {
 	// "/sprs/api/validateOtp"
 	// constants config otp
 	public static final String ACCOUNT_SID = "ACaef9117a42d80b9837a3d4bc0acf8fe0";
-	public static final String AUTH_TOKEN = "15c7d8230a4ae9656dd1d7e435739082";
+	public static final String AUTH_TOKEN = "ffbcaa0205c18b4bbdbfb8682b5609fe";
 	public static final String FROM_NUMBER = "4128967877";
 
 	// constants for request status
@@ -59,6 +59,7 @@ public class Constants {
 	public static final String ORG_ADMIN_PER_CODE = "PER_ORGADM_ACEN";
 	public static final String STORE_PER_CODE = "PER_STR_ACEN";
 	public static final String SYSTEM_ADMIN_PER_CODE = "PER_SYSADM_ACEN";
+	public static final String MOB_ORG_USER_EVENT = "PER_MOB_EVENT";
 	
 	//Constant for status store
 	public static final int STORE_STATUS_OPEN = 0;

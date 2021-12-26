@@ -12,6 +12,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import com.api.entity.Permission;
+import com.api.entity.ReliefPoint;
+import com.api.entity.Store;
 import com.jwt.config.JwtTokenUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -63,6 +66,16 @@ public class Ultilities {
 	    return arrTemp;
 	}
 	
+	public static List<Permission> removeDuplicatePermission(List<Permission> arrListNumber) {
+		List<Permission> arrTemp = new ArrayList<Permission>();
+	    for (int i = 0; i < arrListNumber.size(); i++) {
+	        if (!arrTemp.contains(arrListNumber.get(i))) {
+	            arrTemp.add(arrListNumber.get(i));
+	        }
+	    }
+	    return arrTemp;
+	}
+	
 	public static boolean checkExistIn(int value, int[] inputValues) {
 		boolean isExist = false;
 		for (int i = 0; i < inputValues.length; i++) {
@@ -70,5 +83,41 @@ public class Ultilities {
 				isExist = true;
 		}
 		return isExist;
+	}
+	
+	public static int getStatusRelief(ReliefPoint rp) {
+		Date currDate = getCurrentDate("yyyy-MM-dd hh:mm:ss");
+		Timestamp open_time = rp.getOpen_time();
+		Timestamp close_time = rp.getClose_time();
+		int compare_open = open_time.compareTo(currDate); //0: equals, > 0 greater, <0 less than
+		int compare_close = close_time.compareTo(currDate);
+		if(compare_open > 0) {
+			return 2;
+		}else if(compare_open <= 0 && compare_close >= 0) {
+			return 1;
+		}else {
+			return 0;
+		}
+	}
+	
+	public static int getStatusStore(Store st) {
+		Date d = new Date();
+		Date userDate;
+		try {
+			SimpleDateFormat parser = new SimpleDateFormat("HH:mm:ss");
+			Date open_time = parser.parse(st.getOpen_time().toString());
+			Date close_time = parser.parse(st.getClose_time().toString());
+			userDate = parser.parse(parser.format(d));
+			
+			if (userDate.after(open_time) && userDate.before(close_time)) {
+		        return 0;
+		    }else {
+		    	return 1;
+		    }
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }

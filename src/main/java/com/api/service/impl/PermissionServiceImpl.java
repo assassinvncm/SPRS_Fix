@@ -21,6 +21,7 @@ import com.api.repositories.custom.UserRepositoryCustom;
 import com.api.service.PermissionService;
 import com.exception.AppException;
 import com.ultils.Constants;
+import com.ultils.Ultilities;
 
 @Service
 public class PermissionServiceImpl implements PermissionService{
@@ -91,7 +92,7 @@ public class PermissionServiceImpl implements PermissionService{
 		for (Permission permission : lstAll) {
 			int check = 1;
 			for (Permission permission2 : lstAuthoried) {
-				if(permission2.getId() == permission.getId()) {
+				if(permission2.getId() == permission.getId() || permission.getCode().equals(Constants.MOB_ORG_USER_EVENT)) {
 					check = 0;
 				}
 			}
@@ -131,7 +132,7 @@ public class PermissionServiceImpl implements PermissionService{
 				}
 			);
 		});
-		return listPermissions;
+		return Ultilities.removeDuplicatePermission(listPermissions);
 	}
 
 }

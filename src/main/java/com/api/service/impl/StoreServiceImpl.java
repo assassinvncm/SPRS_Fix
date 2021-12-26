@@ -40,6 +40,7 @@ import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
 import com.ultils.Constants;
+import com.ultils.Ultilities;
 
 @Service
 public class StoreServiceImpl implements StoreService{
@@ -154,8 +155,12 @@ public class StoreServiceImpl implements StoreService{
 		st.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
 		st.setDescription(s.getDescription());
 		st.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
-		st.setStatus(s.getStatus());
 		st.setName(s.getName());
+		
+		if(st.getStatus()!=2) {
+			int status =  Ultilities.getStatusStore(st);
+			st.setStatus(status);
+		}
 		
 		Store storeRsp = storeRepository.saveAndFlush(st);
 		
