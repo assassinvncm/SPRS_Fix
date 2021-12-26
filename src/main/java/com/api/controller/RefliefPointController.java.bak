@@ -253,7 +253,7 @@ public class RefliefPointController {
 		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
 		logger.info("End updateReliefPoint");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
-				"Update reliefpoint By ID " + rp.getId() + " success", "", "", null));
+				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
 	}
 
 	/**

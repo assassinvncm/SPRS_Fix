@@ -225,14 +225,18 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setReliefInformations(lstRIfor);
 		reliefPoint.setAddress(address);
 		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
-		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
 		reliefPoint.setRelief_user(rp.getRelief_user());
+		if(Ultilities.checkTimeUpdate(rp, reliefPointDto)) {
+			reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+			reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		}else {
+			throw new AppException(405,"Thời gian cập nhật không được nhỏ hơn hiện tại.");
+		}
 		
 		if(rp.getStatus()!=3) {
 			int status = Ultilities.getStatusRelief(rp);
@@ -271,13 +275,17 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setReliefInformations(lstRIfor);
 		reliefPoint.setAddress(address);
 		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
-		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
+		if(Ultilities.checkTimeUpdate(rp, reliefPointDto)) {
+			reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+			reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		}else {
+			throw new AppException(405,"Thời gian cập nhật không được nhỏ hơn hiện tại.");
+		}
 		
 		if(rp.getStatus()!=3) {
 			int status = Ultilities.getStatusRelief(rp);
@@ -315,14 +323,18 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setReliefInformations(lstRIfor);
 		reliefPoint.setAddress(address);
 		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
-		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
 		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setUsers(rp.getUsers());
 		reliefPoint.setOrganization(rp.getOrganization());
 		reliefPoint.setRelief_user(rp.getRelief_user());
+		if(Ultilities.checkTimeUpdate(rp, reliefPointDto)) {
+			reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+			reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		}else {
+			throw new AppException(405,"Thời gian cập nhật không được nhỏ hơn hiện tại.");
+		}
 		
 		int status = Ultilities.getStatusRelief(rp);
 		reliefPoint.setStatus(status);
@@ -496,6 +508,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}
 		List<User> lsRs = new ArrayList<User>();
 		List<User> lsTemp = rp.get().getRelief_user();
+		lsTemp.forEach(u -> {
+			if(u.getIsActive()) {
+				lsRs.add(u);
+			}
+		});
 		if(search != "") {
 			lsTemp.forEach(u -> {
 				if(u.getUsername().toLowerCase().contains(search.toLowerCase())) {
@@ -526,6 +543,12 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 				}
 			}
 			if(check == 1) {
+				int checkRA = reliefPointRepository.checkAssignAvailable(rp.getOpen_time().toString(), rp.getClose_time().toString(), u.getId());
+				if(checkRA > 0) {
+					u.setIsAvailable(1);
+				}else {
+					u.setIsAvailable(0);
+				}
 				lsTemp.add(u);
 			}
 		}

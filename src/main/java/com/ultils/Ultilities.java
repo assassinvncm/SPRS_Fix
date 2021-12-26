@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import com.api.dto.ReliefPointDto;
 import com.api.entity.Permission;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
@@ -98,6 +99,30 @@ public class Ultilities {
 		}else {
 			return 0;
 		}
+	}
+	
+	public static boolean checkTimeUpdate(ReliefPoint rp, ReliefPointDto rpdto) {
+		Date d = new Date();
+		Date userDate;
+		try {
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date open_time = parser.parse(rp.getOpen_time().toString());
+			Date close_time = parser.parse(rp.getClose_time().toString());
+			userDate = parser.parse(parser.format(d));
+//			if (rpdto.getOpen_time().equals(open_time) && rpdto.getClose_time().equals(close_time)) {
+//		        return true;
+//		    }else if((!rpdto.getOpen_time().equals(open_time) && rpdto.getOpen_time().before(userDate)) || (!rpdto.getClose_time().equals(close_time) && rpdto.getClose_time().after(userDate))){
+//		    	return true;
+//		    }else 
+		    if((!rpdto.getOpen_time().equals(open_time) && rpdto.getOpen_time().before(userDate)) || (!rpdto.getClose_time().equals(close_time) && rpdto.getClose_time().before(userDate))){
+		    	return false;
+		    }else {
+		    	return true;
+		    }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public static int getStatusStore(Store st) {
