@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.api.dto.ReportDto;
 import com.api.dto.ReportResultDto;
+import com.api.entity.City;
 import com.api.mapper.proc_mapper.ProcedureMapper;
+import com.api.repositories.CityRepository;
 import com.api.repositories.ReportRepository;
 import com.api.service.ReportService;
 import com.common.utils.DateUtils;
@@ -24,6 +26,9 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Autowired 
 	ProcedureMapper mapper;
+	
+	@Autowired
+	CityRepository cityRepo;
 	
 	@Override
 	public Map<String, Object> getReportYear(ReportDto rpdto) {
@@ -365,14 +370,14 @@ public class ReportServiceImpl implements ReportService{
 				, "");
 		
 		List<ReportResultDto> lstRs = mapper.reportMappingProvince(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
-		List<String> labels = new ArrayList<String>();
 		List<Integer> values1 = new ArrayList<Integer>();
 		List<Integer> values2 = new ArrayList<Integer>();
 		List<Integer> values3 = new ArrayList<Integer>();
 		List<Integer> values4 = new ArrayList<Integer>();
-		lstRs.forEach(l -> labelsTemp.add(l.getName()));
-		labels = Ultilities.getLabelReport(labelsTemp);
+		final List<String> labels = new ArrayList<String>();
+		
+		List<City> lstCity = cityRepo.findAll();
+		lstCity.forEach(c -> labels.add(c.getName()));
 
 		for (String label : labels) {
 			boolean isVal1 = false;
@@ -446,14 +451,27 @@ public class ReportServiceImpl implements ReportService{
 				, rpdto.getOrg_id());
 		
 		List<ReportResultDto> lstRs = mapper.reportMappingProvince(lstObj);
-		final List<String> labelsTemp = new ArrayList<String>();
-		List<String> labels = new ArrayList<String>();
-		lstRs.forEach(l -> labelsTemp.add(l.getName()));
-		labels = Ultilities.getLabelReport(labelsTemp);
-
+		List<Integer> values1 = new ArrayList<Integer>();
+		final List<String> labels = new ArrayList<String>();
+		
+		List<City> lstCity = cityRepo.findAll();
+		lstCity.forEach(c -> labels.add(c.getName()));
+		
+		for (String label : labels) {
+			boolean isVal1 = false;
+			for (ReportResultDto reportResultDto : lstRs) {
+				if(label.equals(reportResultDto.getName()) && reportResultDto.getType_point() == 1) {
+					values1.add((int)reportResultDto.getTotal());
+					isVal1 = true;
+				}
+			}
+			if(!isVal1) {
+				values1.add(0);
+			}
+		}
 		
 		Map<String, Object> data = new HashMap<>();
-		data.put("ReliefPoint", lstRs);
+		data.put("ReliefPoint", values1);
 		Map<String, Object> response = new HashMap<>();
         response.put("data", data);
         response.put("label", labels);
