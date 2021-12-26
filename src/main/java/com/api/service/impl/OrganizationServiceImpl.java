@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.dto.OrganizationDto;
+import com.api.entity.Address;
 import com.api.entity.Organization;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.OrganizationRepository;
+import com.api.service.AddressService;
 import com.api.service.OrganizationService;
 import com.exception.AppException;
 
@@ -20,6 +22,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 	
 	@Autowired
 	OrganizationRepository organizationRepository;
+	
+	@Autowired
+	AddressService addressService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -40,7 +45,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 	public void updateOrganzization(OrganizationDto organizationDto) {
 		// TODO Auto-generated method stub
 		Organization organization = mapStructMapper.organizationDtoToOrganization(organizationDto);
-		organizationRepository.save(organization);
+		Address address = addressService.mapAddress(organizationDto.getAddress());
+		organization.setAddress(address);
+		organizationRepository.saveAndFlush(organization);
 	}
 
 	@Override

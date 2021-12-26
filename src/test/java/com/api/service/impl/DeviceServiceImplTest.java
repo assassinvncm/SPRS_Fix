@@ -566,26 +566,26 @@ class DeviceServiceImplTest {
 		    assertEquals(expectedMessage,actualMessage);
 	    }
 	    
-	    @Test
-	    void getDeviceTokenByStoreId_UTCID01() {
-	    	
-	    	//setup data
-	    	final Store store = new Store();
-	    	store.setId(2L);
-	    	
-	    	List<Device> lstDevice = new ArrayList<Device>();
-	    	Device device = new Device();
-	    	device.setId(1L);
-	    	lstDevice.add(device);
-	    	//mock
-	    	when(deviceServiceImplUnderTest.deviceRepository.findTokenUserByStore(store.getId())).thenReturn(lstDevice);
-	    	
-	    	// Run the test
-	        final List<Device> result = deviceServiceImplUnderTest.getDeviceTokenByStoreId(store.getId());
-	    	
-	    	//Verify the results
-	    	assertEquals(device.getId(),result.get(0).getId());
-	    }
+//	    @Test
+//	    void getDeviceTokenByStoreId_UTCID01() {
+//	    	
+//	    	//setup data
+//	    	final Store store = new Store();
+//	    	store.setId(2L);
+//	    	
+//	    	List<Device> lstDevice = new ArrayList<Device>();
+//	    	Device device = new Device();
+//	    	device.setId(1L);
+//	    	lstDevice.add(device);
+//	    	//mock
+//	    	when(deviceServiceImplUnderTest.deviceRepository.findTokenUserByStore(store.getId())).thenReturn(lstDevice);
+//	    	
+//	    	// Run the test
+//	        final List<Device> result = deviceServiceImplUnderTest.getDeviceTokenByStoreId(store.getId());
+//	    	
+//	    	//Verify the results
+//	    	assertEquals(device.getId(),result.get(0).getId());
+//	    }
 
 	    @Test
 	    void testGetDeviceTokenByCity_UTCID01() {
