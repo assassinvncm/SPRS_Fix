@@ -512,20 +512,22 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}
 		List<User> lsRs = new ArrayList<User>();
 		List<User> lsTemp = rp.get().getRelief_user();
+		List<User> lsTempC = new ArrayList<User>();
+		
 		lsTemp.forEach(u -> {
 			if(u.getIsActive()) {
-				lsRs.add(u);
+				lsTempC.add(u);
 			}
 		});
 		if(search != "") {
-			lsTemp.forEach(u -> {
+			lsTempC.forEach(u -> {
 				if(u.getUsername().toLowerCase().contains(search.toLowerCase())) {
 					lsRs.add(u);
 				}
 			});
 			return lsRs;
 		}else {
-			return lsTemp;
+			return lsTempC;
 		}
 	}
 
