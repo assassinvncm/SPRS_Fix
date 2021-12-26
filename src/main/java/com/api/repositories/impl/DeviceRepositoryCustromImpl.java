@@ -54,4 +54,21 @@ public class DeviceRepositoryCustromImpl implements DeviceRepositoryCustom{
 		return devices;
 	}
 
+	@Override
+	public List<Object[]> getDeviceBySubStore(long st_id) {
+		// TODO Auto-generated method stub
+		List<Object[]> devices = new ArrayList<Object[]>();
+		try {
+		StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("prc_device_getDeviceThatSubStore");
+		storedProcedure.registerStoredProcedureParameter("storeId", Long.class, ParameterMode.IN);
+		
+		storedProcedure.setParameter("storeId", st_id);
+		storedProcedure.execute();
+		devices = storedProcedure.getResultList();
+		} catch (Exception e) {
+			logger.error("get device of user that sub store -> {}", e.getMessage());
+		}
+		return devices;
+	}
+
 }

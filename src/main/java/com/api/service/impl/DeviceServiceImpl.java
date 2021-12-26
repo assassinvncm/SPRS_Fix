@@ -1,21 +1,26 @@
 package com.api.service.impl;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.api.controller.UserController;
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
+import com.api.dto.MapPointsDto;
 import com.api.entity.Address;
 import com.api.entity.Device;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.DeviceRepository;
+import com.api.repositories.custom.DeviceRepositoryCustom;
 import com.api.service.AddressService;
 import com.api.service.DeviceService;
 import com.api.service.NotificationService;
@@ -28,6 +33,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	DeviceRepository deviceRepository;
+	
+	@Autowired
+	DeviceRepositoryCustom deviceRepositoryCus;
 
 	@Autowired
 	MapStructMapper mapStructMapper;
@@ -115,7 +123,28 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public List<Device> getDeviceTokenByStoreId(Long sId) {
 		// TODO Auto-generated method stub
-		return deviceRepository.findTokenUserByStore(sId);
+		List<Device> devices = new ArrayList<Device>();
+		List<Object[]> deviceObjs = deviceRepositoryCus.getDeviceBySubStore(sId);
+		for (Object[] obj : deviceObjs) {
+			Device d = new Device();
+			BigInteger d_id = null;
+			BigInteger u_id = null;
+			if(d_id != null) {
+				d_id = (BigInteger) obj[0];
+				d.setId(d_id.longValue());
+			}
+			if(obj[1] != null) {
+				d.setToken((String) obj[1]);
+			}
+			if(obj[5] != null) {
+				u_id = (BigInteger) obj[5];
+				User u = new User();
+				u.setId(u_id.longValue());
+				d.setUser(u);
+			}
+			devices.add(d);
+		}
+		return devices;
 	}
 
 	@Override

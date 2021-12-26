@@ -189,12 +189,18 @@ public class NotificationServiceImpl implements NotificationService {
 		List<User> user = new ArrayList<User>();
 		for (Device d : lstDevice) {
 			user.add(d.getUser());
-			lstToken.add(d.getToken());
+			
+			if(d.getToken() != null) {
+				lstToken.add(d.getToken());
+			}
 		}
 
-		if (lstToken.isEmpty()) {
+		//check if have not user who sub this store_id
+		if (user.isEmpty()) {
 			return;
 		}
+		
+		
 		// set notification
 		Notification notification = new Notification();
 		// notification.setTitle(store.getName());
@@ -207,20 +213,25 @@ public class NotificationServiceImpl implements NotificationService {
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
 		log.info("END save notification to user that subcribe STORE ");
-		log.info("START send notification to user that subcribe STORE ");
-		// set data push notification
-		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
-		pushNotificationRequest.setTarget(lstToken);
-		pushNotificationRequest.setTitle(store.getName());
-		pushNotificationRequest.setBody(message);
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("id", String.valueOf(notificationRes.getId()));
-		data.put("type", notificationRes.getType());
-		data.put("sender", String.valueOf(store.getId()));
-		pushNotificationRequest.setData(data);
+		
+		//check if device is active
+		if(!lstToken.isEmpty()) {
+			log.info("START send notification to user that subcribe STORE ");
+			// set data push notification
+			PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+			pushNotificationRequest.setTarget(lstToken);
+			pushNotificationRequest.setTitle(store.getName());
+			pushNotificationRequest.setBody(message);
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("id", String.valueOf(notificationRes.getId()));
+			data.put("type", notificationRes.getType());
+			data.put("sender", String.valueOf(store.getId()));
+			pushNotificationRequest.setData(data);
 
-		this.sendPnsToDevices(pushNotificationRequest);
-		log.info("end send notification to user that subcribe STORE ");
+			this.sendPnsToDevices(pushNotificationRequest);
+			log.info("end send notification to user that subcribe STORE ");
+		}
+		
 	}
 
 	@Override
@@ -380,7 +391,34 @@ public class NotificationServiceImpl implements NotificationService {
 		List<Device> lstDevice = procedureMapper.getDevice(lstDeviceObj);
 		
 		//check have any user ??
+
+		List<String> lstToken = new ArrayList<String>();
+		List<User> users = new ArrayList<User>();
+		List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
+		for (int i = 0; i < lstDevice.size(); i++) {
+			users.add(lstDevice.get(i).getUser());
+
+			
+			if(lstToken!= null) {
+				// add token to list
+				lstToken.add(lstDevice.get(i).getToken());
+				int count = i + 1;
+				// split batch to send notification 500/1request
+				if (count % 10 == 0 || i == lstDevice.size() - 1) {
+					PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+					pushNotificationRequest.setTarget(lstToken);
+					lstPushNotificationRequest.add(pushNotificationRequest);
+					lstToken = new ArrayList<String>();
+				}
+			}
+
+		}
 		
+		//check user is empty
+		if (users.isEmpty()) {
+			throw new AppException(411,"Không có người dùng nào trong khu vực!");
+		}
+
 		// set notification
 		Notification notification = new Notification();
 		notification.setTitle(admPsn.getTitle());
@@ -389,52 +427,31 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
 		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
 		notification.setCreate_time(DateUtils.getCurrentSqlDate());
-
-		List<String> lstToken = new ArrayList<String>();
-		List<User> users = new ArrayList<User>();
-		List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
-		for (int i = 0; i < lstDevice.size(); i++) {
-			users.add(lstDevice.get(i).getUser());
-
-			// add token to list
-			lstToken.add(lstDevice.get(i).getToken());
-
-			int count = i + 1;
-			// split batch to send notification 500/1request
-			if (count % 10 == 0 || i == lstDevice.size() - 1) {
-				PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
-				pushNotificationRequest.setTarget(lstToken);
-				lstPushNotificationRequest.add(pushNotificationRequest);
-				lstToken = new ArrayList<String>();
-			}
-
-		}
-		if (lstDevice.isEmpty()) {
-			return;
-		}
 		notification.setReceiver(users);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
+		
+		//check if user don't login on device
+		if(lstToken.isEmpty()) {
+			// set data push notification
+			lstPushNotificationRequest = lstPushNotificationRequest.stream().map((noti) -> {
+				noti.setTitle(admPsn.getTitle());
+				noti.setBody(admPsn.getMessage());
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("id", String.valueOf(notificationRes.getId()));
+				data.put("type", notificationRes.getType());
+				data.put("sender", String.valueOf(admin.getId()));
+				noti.setData(data);
+				return noti;
+			}).collect(Collectors.toList());
 
-		// set data push notification
-		lstPushNotificationRequest = lstPushNotificationRequest.stream().map((noti) -> {
-			noti.setTitle(admPsn.getTitle());
-			noti.setBody(admPsn.getMessage());
-			Map<String, String> data = new HashMap<String, String>();
-			data.put("id", String.valueOf(notificationRes.getId()));
-			data.put("type", notificationRes.getType());
-			data.put("sender", String.valueOf(admin.getId()));
-			noti.setData(data);
-			return noti;
-		}).collect(Collectors.toList());
+			jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
+				sendPnsToDevices(pushnotification);
+			});
 
-		jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
-			sendPnsToDevices(pushnotification);
-		});
-
-		// send push notification to device
-		// this.sendPnsToDevices(pushNotificationRequest);
-
+			// send push notification to device
+			// this.sendPnsToDevices(pushNotificationRequest);
+		}
 	}
 
 	@Override

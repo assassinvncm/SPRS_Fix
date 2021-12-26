@@ -37,13 +37,23 @@ public class ProcedureMapper {
 		List<Device> rs = new ArrayList<Device>();
 		for(Object[] obj : lstObj) {
 			Device d = new Device();
-			d.setId(((BigInteger) obj[0]).longValue());
-			d.setToken((String)obj[1]);
+			if(obj[0] != null) {
+				d.setId(((BigInteger) obj[0]).longValue());
+			}
+			if(obj[1] != null) {
+				d.setToken((String)obj[1]);
+			}
+			
 			//d.setAddress((String)obj[2]);
-			User u = new User();
-			u.setId(((BigInteger) obj[3]).longValue());
-			d.setUser(u);
-			d.setSerial((String)obj[4]);
+
+			if(obj[4] != null) {
+				d.setSerial((String)obj[4]);
+			}
+			if(obj[5] != null) {
+				User u = new User();
+				u.setId(((BigInteger) obj[3]).longValue());
+				d.setUser(u);
+			}
 			rs.add(d);
 		}
 		return rs;

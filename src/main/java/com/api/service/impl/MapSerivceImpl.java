@@ -167,7 +167,8 @@ public class MapSerivceImpl implements MapService {
 			return rs;
 			
 		}else if(type.equalsIgnoreCase(Constants.MAP_TYPE_SOS)) {
-			if(u.getUser_sos().getId() == p_id) {
+			SOS sos = u.getUser_sos();
+			if(sos != null && u.getUser_sos().getId() == p_id) {
 				return true;
 			}else {
 				return false;
