@@ -101,7 +101,13 @@ public class MapSerivceImpl implements MapService {
 	}
 
 	public SearchGoongMap searchApiGoongMap(String searchText, double lati, double longti, int limit) {
-
+		SearchGoongMap searchGoongMap = null;
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		String url = "https://rsapi.goong.io/Place/AutoComplete?api_key=" + api_key + "&location=" + lati + "," + longti
 				+ "&input=" + searchText + "&limit=" + limit;
 
@@ -124,7 +130,7 @@ public class MapSerivceImpl implements MapService {
 
 		HttpStatus statusCode = response.getStatusCode();
 
-		SearchGoongMap searchGoongMap = null;
+
 		// Status Code: 200
 		if (statusCode == HttpStatus.OK) {
 			// Response Body Data

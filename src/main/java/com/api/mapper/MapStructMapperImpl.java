@@ -202,6 +202,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		organizationDto.setId(organization.getId());
 		organizationDto.setName(organization.getName());
 		organizationDto.setFounded(organization.getFounded());
+		organizationDto.setDescription(organization.getDescription());
 
 		return organizationDto;
 	}
@@ -227,7 +228,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}
 		Organization org = new Organization();
 		org.setAddress(addressDtoToAddress(orgDto.getAddress()));
-		org.setDescription(orgDto.getDescription());
+ 		org.setDescription(orgDto.getDescription());
 		org.setFounded(DateUtils.convertUtilToSqlDate(orgDto.getFounded()));
 		org.setId(orgDto.getId());
 		org.setName(orgDto.getName());

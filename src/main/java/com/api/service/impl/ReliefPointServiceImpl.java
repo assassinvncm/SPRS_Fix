@@ -480,6 +480,10 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		switch (status) {
 		case "FAIL":
 			throw new AppException(402,pErr.getErr_message());
+		case "DONE":{
+			//send notification for member
+			break;
+		}	
 		default:
 			break;
 		}
