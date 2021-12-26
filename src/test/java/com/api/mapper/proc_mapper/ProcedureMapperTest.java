@@ -41,18 +41,18 @@ class ProcedureMapperTest {
 		assertEquals(1, result.get(0).getId());
 	}
 
-	@Test
-	void testGetDevice_UTCID01() {
-		// Setup
-		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { new BigInteger("1"),"882hđmekdd","",new BigInteger("1"),"sgsjj27sg" };
-		lstObject.add(obj);
-		// Run the test
-		final List<Device> result = procedureMapperUnderTest.getDevice(lstObject);
-
-		// Verify the results
-		assertEquals(1, result.get(0).getId());
-	}
+//	@Test
+//	void testGetDevice_UTCID01() {
+//		// Setup
+//		List<Object[]> lstObject = new ArrayList<Object[]>();
+//		Object[] obj = new Object[] { new BigInteger("1"),"882hđmekdd","",new BigInteger("1"),"sgsjj27sg" };
+//		lstObject.add(obj);
+//		// Run the test
+//		final List<Device> result = procedureMapperUnderTest.getDevice(lstObject);
+//
+//		// Verify the results
+//		assertEquals(1, result.get(0).getId());
+//	}
 
 	@Test
 	void testReportMapping_UTCID01() {
