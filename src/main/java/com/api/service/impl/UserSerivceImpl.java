@@ -270,7 +270,7 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
 		user.getOrganization().setCreate_time(DateUtils.getCurrentSqlDate());
-		//user.setIsActive(false);
+		user.setIsActive(true);
 		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -358,7 +358,7 @@ public class UserSerivceImpl implements UserService {
 		Address address = addressService.mapAddress(userDto.getAddress());
 		user.setAddress(address);
 
-		user.setIsActive(false);
+		user.setIsActive(true);
 		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

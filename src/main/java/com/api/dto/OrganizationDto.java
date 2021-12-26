@@ -3,6 +3,7 @@ package com.api.dto;
 import java.sql.Date;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbProperty;
 
 import com.api.entity.Address;
 import com.api.entity.Request;
@@ -26,14 +27,19 @@ public class OrganizationDto {
 		this.request = request;
 	}
 	
+	@JsonbProperty("id")
 	private long id;
 	
+	@JsonbProperty("name")
 	private String name;
 	
+	@JsonbProperty("founded")
 	private Date founded;
 
+	@JsonbProperty("description")
 	private String description;
 	
+	@JsonbProperty("address")
 	private AddressDto address;
 	
 	private List<RequestDto> request;
