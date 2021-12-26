@@ -132,12 +132,12 @@ public class NotificationController {
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> sendNotifications(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody AdminPushNotifcationRequest admPns) {
-
+		
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
 		notificationService.adminSendNotification(admPns, user);
 		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
+				.ok(new SPRSResponse(Constants.SUCCESS, "Send notification Successfull", "", "", null));
 	}
 
 	@GetMapping("/admin/get")

@@ -51,7 +51,7 @@ public class ProcedureMapper {
 			}
 			if(obj[5] != null) {
 				User u = new User();
-				u.setId(((BigInteger) obj[3]).longValue());
+				u.setId(((BigInteger) obj[5]).longValue());
 				d.setUser(u);
 			}
 			rs.add(d);
