@@ -71,4 +71,18 @@ public class DeviceRepositoryCustromImpl implements DeviceRepositoryCustom{
 		return devices;
 	}
 
+	@Override
+	public List<Object[]> getUserInRangeRp() {
+		// TODO Auto-generated method stub
+		List<Object[]> users = new ArrayList<Object[]>();
+		try {
+		StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("prc_getUserInRangeRp");
+		storedProcedure.execute();
+		users = storedProcedure.getResultList();
+		} catch (Exception e) {
+			logger.error("get user in range relief point -> {}", e.getMessage());
+		}
+		return users;
+	}
+
 }

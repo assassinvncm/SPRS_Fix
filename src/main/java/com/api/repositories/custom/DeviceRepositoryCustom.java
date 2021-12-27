@@ -20,4 +20,10 @@ public interface DeviceRepositoryCustom {
 	 * @return
 	 */
 	List<Object[]> getDeviceBySubStore(long st_id);
+	
+	/**
+	 * get user login device that in range relief point
+	 * @return
+	 */
+	List<Object[]> getUserInRangeRp();
 }

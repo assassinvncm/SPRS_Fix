@@ -1,6 +1,7 @@
 package com.api.service.impl;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -333,6 +334,10 @@ public class NotificationServiceImpl implements NotificationService {
 	public Notification saveNotification(Notification notificaitons) {
 		return notificationRepository.saveAndFlush(notificaitons);
 	}
+	
+	public List<Notification> saveListNotification(List<Notification> lstNotificaitons) {
+		return notificationRepository.saveAllAndFlush(lstNotificaitons);
+	}
 
 	@Override
 	public PagingResponse<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize) {
@@ -469,14 +474,82 @@ public class NotificationServiceImpl implements NotificationService {
 		return pagingResonpne;
 	}
 	
-//	@Scheduled(cron = "0 0 5 * * ?")
-//	public void scheduleTaskWithCronExpression() {
-//	    log.info("Start send notification to user to notify of relief point");
-//	    //query db to get list reliefpoint sap dien ra
-//	    //send thông báo cho người dùng khi reliefpoint sap dien ra
-//	    this.sendPnsToDeviceWhenCreateReliefPoint(null, "");
-//	    log.info("End send notification to user to notify of relief point");
-//	    
-//	}
+	@Scheduled(cron = "0 0 5 * * ?")
+	public void scheduleTaskWithCronExpression() {
+	    log.info("Start send notification to user to notify of relief point");
+	    //query db to get list reliefpoint sap dien ra
+	    List<Object[]> userObj = deviceRepositoryCustom.getUserInRangeRp();
+    	//check user is empty
+  		if (userObj.isEmpty()) {
+  			return;
+  		}
+	    //send thông báo cho người dùng khi reliefpoint sap dien ra
+	    List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
+	    List<Notification> lstSaveNotification = new ArrayList<Notification>();
+
+	    int count = 0;
+	    for(Object[] u: userObj) {
+	    	
+	    	Long uid = null;
+	    	String token = null;
+	    	Long rp_number = null;
+	    	
+	    	if(u[0] != null) {
+	    		uid = ((BigInteger)u[0]).longValue(); 
+	    	}
+	    	if(u[1] != null) {
+	    		token = (String)u[1];
+	    	}
+	    	if(u[2] != null) {
+	    		rp_number = ((BigInteger)u[0]).longValue(); 
+	    	}
+	    	
+	    	List<User> users = new ArrayList<User>();
+	    	User user = new User();
+	    	user.setId(uid);
+	    	users.add(user);
+	    	
+	    	Notification notification = new Notification();
+	    	notification.setTitle("SPRS");
+	  		notification.setMessage("Hôm nay có " + rp_number + " điểm cứu trợ diễn ra gần bạn");
+	  		notification.setSender(null);
+	  		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
+	  		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
+	  		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+	  		notification.setReceiver(users);
+	  		lstSaveNotification.add(notification);
+	  		Notification notificationRes = this.saveNotification(notification);
+	  		
+	  		
+		    List<String> lstToken = new ArrayList<String>();
+	    	lstToken.add(token);
+	    
+    		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+    		pushNotificationRequest.setTitle("SPRS");
+    		pushNotificationRequest.setBody("Hôm nay có " + rp_number + " điểm cứu trợ diễn ra gần bạn");
+			pushNotificationRequest.setTarget(lstToken);
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("id", String.valueOf(notificationRes.getId()));
+			data.put("type", notificationRes.getType());
+			data.put("sender", "0");
+			pushNotificationRequest.setData(data);
+			lstPushNotificationRequest.add(pushNotificationRequest);
+			lstToken = new ArrayList<String>();
+			count = 0;
+
+	    	
+	    }
+  		
+  		
+  		//check if user don't login on device
+  		if(!lstPushNotificationRequest.isEmpty()) {
+  			// set data push notification
+  			jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
+  				sendPnsToDevices(pushnotification);
+  			});
+  		}
+	    log.info("End send notification to user to notify of relief point");
+	    
+	}
 
 }
