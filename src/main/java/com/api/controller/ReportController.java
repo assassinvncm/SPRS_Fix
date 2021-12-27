@@ -120,5 +120,4 @@ public class ReportController {
 		logger.info("End get report Overview");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
 	}
-	
 }
