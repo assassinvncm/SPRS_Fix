@@ -161,7 +161,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setUsers(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		
-//		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
+		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
 		return rp;
 	}
 

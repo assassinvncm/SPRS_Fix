@@ -204,7 +204,7 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		// set notification
 		Notification notification = new Notification();
-		// notification.setTitle(store.getName());
+		notification.setTitle(store.getName());
 		notification.setMessage(message);
 		notification.setStore(store);
 		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
@@ -255,7 +255,7 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		// set notification
 		Notification notification = new Notification();
-		// notification.setTitle(rp.getName());
+		notification.setTitle("Điểm Cứu Trợ");
 		notification.setMessage(message);
 		notification.setReliefPoint(rp);
 		notification.setType(Constants.NOTIFICATION_TYPE_RELIEFPOINT);
@@ -269,7 +269,7 @@ public class NotificationServiceImpl implements NotificationService {
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
-		pushNotificationRequest.setTitle(rp.getName());
+		pushNotificationRequest.setTitle("Điểm Cứu Trợ");
 		pushNotificationRequest.setBody(message);
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("id", String.valueOf(notificationRes.getId()));
@@ -302,7 +302,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// set notification
 		Notification notification = new Notification();
-		notification.setTitle(user.getFull_name());
+		notification.setTitle("SOS");
 		notification.setMessage(message);
 		notification.setSos(sos);
 		notification.setType(Constants.NOTIFICATION_TYPE_SOS);
@@ -316,7 +316,7 @@ public class NotificationServiceImpl implements NotificationService {
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
-		// pushNotificationRequest.setTitle(SOS.getName());
+		pushNotificationRequest.setTitle("SOS");
 		pushNotificationRequest.setBody(message);
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("id", String.valueOf(notificationRes.getId()));
@@ -339,12 +339,26 @@ public class NotificationServiceImpl implements NotificationService {
 		// TODO Auto-generated method stub
 		Sort sort = Sort.by("create_time").descending();
 		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
-		Page<Notification> lstNotification = notificationRepository.getNotifications(uId, pageable);
-
+		Page<Notification> lstNotificationPage = notificationRepository.getNotifications(uId, pageable);
+		List<Notification> lstNotification = lstNotificationPage.toList();
+		for(int i = 0; i < lstNotification.size(); i++) {
+			String type = lstNotification.get(i).getType();
+			String title = lstNotification.get(i).getTitle();
+			String body = lstNotification.get(i).getMessage();
+			if(type.equals(Constants.NOTIFICATION_TYPE_SOS)) {
+				title = "SOS";
+			}else if(type.equals(Constants.NOTIFICATION_TYPE_RELIEFPOINT)) {
+				title = "Điểm Cứu Trợ";
+			}else if(type.equals(Constants.NOTIFICATION_TYPE_STORE)) {
+				title = "Cửa Hàng" + " " + lstNotification.get(i).getStore().getName();
+			}
+			lstNotification.get(i).setTitle(title);
+		}
+		
 		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
-		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
-		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
-		pagingResonpne.setTotalRecord(lstNotification.getTotalElements());
+		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotificationPage.get()));
+		pagingResonpne.setTotalPage(lstNotificationPage.getTotalPages());
+		pagingResonpne.setTotalRecord(lstNotificationPage.getTotalElements());
 		return pagingResonpne;
 	}
 
